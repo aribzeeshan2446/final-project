@@ -4,12 +4,19 @@ import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCw, Lightbulb } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
 import { useFirebase, useUser, initiateAnonymousSignIn, setDocumentNonBlocking } from "@/firebase";
 import { doc } from "firebase/firestore";
+
+const SAMPLES = [
+  "The Great Wall of China is the only man-made structure visible from the Moon.",
+  "Humans use only 10% of their brains for daily cognitive tasks.",
+  "Goldfish have a three-second memory span.",
+  "Mount Everest is the closest point on Earth to space."
+];
 
 export function TextVerifier() {
   const [inputText, setInputText] = useState("");
@@ -89,6 +96,29 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-8">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 text-slate-500 mb-2">
+          <Lightbulb className="h-4 w-4 text-primary" />
+          <span className="text-sm font-semibold uppercase tracking-wider">Try a sample claim</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {SAMPLES.map((sample, i) => (
+            <Button
+              key={i}
+              variant="outline"
+              size="sm"
+              className="rounded-full text-xs bg-white hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all border-slate-200 shadow-sm"
+              onClick={() => {
+                setInputText(sample);
+                setResult(null);
+              }}
+            >
+              {sample.substring(0, 50)}...
+            </Button>
+          ))}
+        </div>
+      </div>
+
       <Card className="border-2 shadow-xl overflow-hidden bg-white">
         <CardContent className="p-0">
           <div className="flex flex-col">
@@ -113,21 +143,36 @@ export function TextVerifier() {
               <p className="text-xs text-muted-foreground">
                 {inputText.length} characters
               </p>
-              <Button 
-                onClick={handleVerify} 
-                disabled={isVerifying || !inputText.trim()}
-                className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 shadow-lg shadow-primary/20"
-              >
-                {isVerifying ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" /> Verifying...
-                  </>
-                ) : (
-                  <>
-                    <ShieldCheck className="h-4 w-4" /> Verify Accuracy
-                  </>
+              <div className="flex items-center gap-2">
+                {inputText && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="rounded-full h-10 w-10 p-0"
+                    onClick={() => {
+                      setInputText("");
+                      setResult(null);
+                    }}
+                  >
+                    <RefreshCw className="h-4 w-4 text-slate-400" />
+                  </Button>
                 )}
-              </Button>
+                <Button 
+                  onClick={handleVerify} 
+                  disabled={isVerifying || !inputText.trim()}
+                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 shadow-lg shadow-primary/20 h-10"
+                >
+                  {isVerifying ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" /> Verifying...
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-4 w-4" /> Verify Accuracy
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>
