@@ -8,8 +8,8 @@ import { ShieldCheck, Search, Loader2, RefreshCw } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
-import { useFirebase, useUser, initiateAnonymousSignIn, addDocumentNonBlocking } from "@/firebase";
-import { collection } from "firebase/firestore";
+import { useFirebase, useUser, initiateAnonymousSignIn, setDocumentNonBlocking } from "@/firebase";
+import { doc } from "firebase/firestore";
 
 export function TextVerifier() {
   const [inputText, setInputText] = useState("");
@@ -49,9 +49,11 @@ export function TextVerifier() {
 
       // Save to Firestore history if user is authenticated
       if (user && firestore) {
-        const historyRef = collection(firestore, 'users', user.uid, 'verificationResults');
+        const verificationId = crypto.randomUUID();
+        const docRef = doc(firestore, 'users', user.uid, 'verificationResults', verificationId);
+        
         const verificationData = {
-          id: crypto.randomUUID(), // For security rules validation
+          id: verificationId, // For security rules validation (must match doc ID)
           originalText: inputText,
           sourceUrl: window.location.href,
           verdict: output.verdict,
@@ -59,8 +61,8 @@ export function TextVerifier() {
           checkedAt: new Date().toISOString(),
         };
         
-        // Pass the generated ID to the non-blocking helper
-        addDocumentNonBlocking(historyRef, verificationData);
+        // Use setDocumentNonBlocking to ensure the doc ID matches the internal ID field
+        setDocumentNonBlocking(docRef, verificationData, { merge: true });
       }
 
     } catch (error) {
