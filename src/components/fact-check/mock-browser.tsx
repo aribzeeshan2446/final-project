@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Search, Globe, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
@@ -20,31 +21,37 @@ export function MockBrowser() {
   const { toast } = useToast();
 
   const handleTextSelection = () => {
-    const selection = window.getSelection();
-    const text = selection?.toString().trim();
-    
-    if (text && text.length > 5 && selection && selection.rangeCount > 0) {
-      const range = selection.getRangeAt(0);
-      const rect = range.getBoundingClientRect();
+    // Small delay to ensure selection is stable
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const text = selection?.toString().trim();
       
-      if (rect) {
-        setTooltipPos({
-          x: rect.left + rect.width / 2,
-          y: rect.top - 10
-        });
-        setSelectedText(text);
-        setShowTooltip(true);
+      if (text && text.length > 5 && selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const rect = range.getBoundingClientRect();
+        
+        if (rect) {
+          setTooltipPos({
+            x: rect.left + rect.width / 2,
+            y: rect.top - 10
+          });
+          setSelectedText(text);
+          setShowTooltip(true);
+        }
+      } else {
+        // Only hide if we aren't currently verifying or showing a result
+        if (!isVerifying && !result) {
+          setShowTooltip(false);
+        }
       }
-    } else {
-      setShowTooltip(false);
-    }
+    }, 10);
   };
 
-  const verifyText = async () => {
-    if (!selectedText) return;
+  const verifyText = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     
-    // Clear browser selection for cleaner UI
-    window.getSelection()?.removeAllRanges();
+    if (!selectedText) return;
     
     setShowTooltip(false);
     setIsVerifying(true);
@@ -53,6 +60,8 @@ export function MockBrowser() {
     try {
       const output = await verifySelectedTextAccuracy({ selectedText });
       setResult(output);
+      // Clear browser selection after successful capture
+      window.getSelection()?.removeAllRanges();
     } catch (error) {
       console.error("Verification failed", error);
       toast({
@@ -132,10 +141,12 @@ export function MockBrowser() {
               top: tooltipPos.y, 
               transform: 'translate(-50%, -100%)' 
             }}
+            onMouseUp={(e) => e.stopPropagation()} // Prevent parent container from seeing this click
           >
             <Button 
               size="sm" 
               className="bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg gap-2 px-4 py-2"
+              onMouseDown={(e) => e.preventDefault()} // CRITICAL: Prevent the button from taking focus and clearing selection
               onClick={verifyText}
             >
               <ShieldCheck className="h-4 w-4" />
@@ -170,7 +181,10 @@ export function MockBrowser() {
                     variant="ghost" 
                     size="sm" 
                     className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
-                    onClick={() => setResult(null)}
+                    onClick={() => {
+                      setResult(null);
+                      setSelectedText("");
+                    }}
                   >
                     Dismiss
                   </Button>
