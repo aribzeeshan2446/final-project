@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * FIREBASE SECURITY RULES DOCUMENTATION
+     *
+     * Core Philosophy: 
+     * This ruleset enforces a strict User-Ownership model. All data within the system is 
+     * private by default and explicitly tied to an authenticated user's unique identifier (UID).
+     *
+     * Data Structure: 
+     * The database is organized hierarchically starting with the `/users/{userId}` path. 
+     * All functional data, such as factual verification results (chat history), is stored 
+     * as subcollections nested directly under the owner's user document.
+     *
+     * Key Security Decisions:
+     * 1. User Privacy: Listing the `/users` collection is strictly forbidden to prevent user 
+     *    enumeration. Users can only access their own profile document.
+     * 2. Path-Based Authorization: Authorization is derived directly from the document path. 
+     *    By including `{userId}` in the path, we eliminate the need for costly `get()` 
+     *    calls to check ownership, ensuring high performance and clear security boundaries.
+     * 3. Prototyping Flexibility: While authorization (who can access what) is strictly 
+     *    enforced, the internal schema of documents is not validated. This allows the 
+     *    application to evolve its data model without requiring immediate rules updates.
+     *
+     * Denormalization for Authorization:
+     * Ownership is primarily enforced via the document path. For subcollections, 
+     * relational integrity is checked during creation to ensure that internal 'id' 
+     * fields match the document path, preventing data-path mismatches.
+     */
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    /**
+     * @description Checks if the request is made by an authenticated user.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Checks if the authenticated user's UID matches the provided userId.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * @description Checks if the user is the owner and the document currently exists.
+     * Used for update and delete operations to ensure state-change safety.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    // --- COLLECTION RULES ---
+
+    match /users/{userId} {
+      /**
+       * @description Rules for the root user document. Allows users to manage their own profile.
+       * @path /users/{userId}
+       * @allow (get, create, update, delete) if the user's UID matches the document ID.
+       * @deny (list) Prevent listing all users in the system.
+       * @principle Enforces strict self-ownership and prevents user discovery.
+       */
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId);
+      allow update: if isExistingOwner(userId);
+      allow delete: if isExistingOwner(userId);
+
+      match /verificationResults/{verificationResultId} {
+        /**
+         * @description Rules for factual verification results (chat history).
+         * @path /users/{userId}/verificationResults/{verificationResultId}
+         * @allow (get, list, create, update, delete) if the user is the owner of the parent path.
+         * @deny (all) if the authenticated UID does not match the {userId} in the path.
+         * @principle Path-based ownership provides atomic, high-performance authorization for private subcollections.
+         */
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        
+        // On create, ensure the internal 'id' field matches the document ID in the path for relational integrity.
+        allow create: if isOwner(userId) && request.resource.data.id == verificationResultId;
+        
+        // On update, ensure the 'id' field remains immutable.
+        allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+        
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    // Default deny for any paths not explicitly matched.
+    match /{path=**} {
+      allow read, write: if false;
+    }
+  }
+}
