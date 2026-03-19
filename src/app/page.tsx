@@ -1,6 +1,7 @@
-import { ShieldCheck, ArrowRight, Zap, CircleCheckBig } from "lucide-react";
+import { ShieldCheck, ArrowRight, Zap, CircleCheckBig, History as HistoryIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextVerifier } from "@/components/fact-check/text-verifier";
+import { VerificationHistory } from "@/components/fact-check/history";
 import Link from "next/link";
 
 export default function Home() {
@@ -20,11 +21,13 @@ export default function Home() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <a href="#how-it-works" className="hover:text-primary transition-colors">How it works</a>
+            <a href="#history" className="hover:text-primary transition-colors flex items-center gap-2">
+              <HistoryIcon className="h-4 w-4" /> History
+            </a>
             <Link href="/extension-demo" className="hover:text-primary transition-colors">Extension Demo</Link>
             <a href="#" className="hover:text-primary transition-colors">Pricing</a>
           </nav>
-          <div className="w-10 md:hidden" /> {/* Spacer for mobile layout balance if needed */}
+          <div className="w-10 md:hidden" />
         </div>
       </header>
 
@@ -51,8 +54,25 @@ export default function Home() {
           </div>
         </section>
 
+        {/* History Section */}
+        <section id="history" className="py-20 px-4 border-t bg-white">
+          <div className="container mx-auto max-w-5xl">
+            <div className="flex flex-col gap-8">
+              <div className="space-y-2">
+                <h3 className="text-3xl font-bold font-headline tracking-tight text-slate-900">
+                  Verification <span className="text-primary">History</span>
+                </h3>
+                <p className="text-muted-foreground">
+                  Review your previous fact-checks and tracking history.
+                </p>
+              </div>
+              <VerificationHistory />
+            </div>
+          </div>
+        </section>
+
         {/* CTA to Extension */}
-        <section id="how-it-works" className="py-20 px-4 border-y bg-white">
+        <section className="py-20 px-4 border-t bg-slate-50">
           <div className="container mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
               <div className="space-y-6">

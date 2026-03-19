@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw, AlertCircle, CheckCircle2, HelpCircle } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCw } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
+import { useFirebase, useUser, initiateAnonymousSignIn, addDocumentNonBlocking } from "@/firebase";
+import { collection } from "firebase/firestore";
 
 export function TextVerifier() {
   const [inputText, setInputText] = useState("");
@@ -16,7 +18,17 @@ export function TextVerifier() {
     verdict: 'Likely Accurate' | 'Needs Verification' | 'Potentially Misleading';
     suggestedCorrectionOrContext: string | null;
   } | null>(null);
+  
   const { toast } = useToast();
+  const { firestore, auth } = useFirebase();
+  const { user } = useUser();
+
+  // Ensure user is signed in anonymously to save history
+  useEffect(() => {
+    if (!user && auth) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [user, auth]);
 
   const handleVerify = async () => {
     if (!inputText.trim()) return;
@@ -34,6 +46,23 @@ export function TextVerifier() {
     try {
       const output = await verifySelectedTextAccuracy({ selectedText: inputText });
       setResult(output);
+
+      // Save to Firestore history if user is authenticated
+      if (user && firestore) {
+        const historyRef = collection(firestore, 'users', user.uid, 'verificationResults');
+        const verificationData = {
+          id: crypto.randomUUID(), // For security rules validation
+          originalText: inputText,
+          sourceUrl: window.location.href,
+          verdict: output.verdict,
+          suggestedCorrection: output.suggestedCorrectionOrContext,
+          checkedAt: new Date().toISOString(),
+        };
+        
+        // Pass the generated ID to the non-blocking helper
+        addDocumentNonBlocking(historyRef, verificationData);
+      }
+
     } catch (error) {
       console.error("Verification failed", error);
       toast({
