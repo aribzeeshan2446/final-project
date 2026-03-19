@@ -23,8 +23,6 @@ export default function Home() {
             <Link href="/history" className="hover:text-primary transition-colors flex items-center gap-2 text-slate-600">
               <HistoryIcon className="h-4 w-4" /> History
             </Link>
-            <Link href="/extension-demo" className="hover:text-primary transition-colors text-slate-600">Extension Demo</Link>
-            <a href="#" className="hover:text-primary transition-colors text-slate-600">Pricing</a>
           </nav>
           <div className="w-10 md:hidden" />
         </div>
