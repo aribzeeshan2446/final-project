@@ -3,7 +3,7 @@
 import React from "react";
 import { collection, query, orderBy, limit } from "firebase/firestore";
 import { useFirebase, useUser, useCollection, useMemoFirebase } from "@/firebase";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
   Carousel, 
@@ -12,8 +12,9 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, MessageSquare } from "lucide-react";
+import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, Quote, ArrowRight } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function VerificationHistory() {
   const { firestore } = useFirebase();
@@ -24,7 +25,7 @@ export function VerificationHistory() {
     return query(
       collection(firestore, "users", user.uid, "verificationResults"),
       orderBy("checkedAt", "desc"),
-      limit(10)
+      limit(12)
     );
   }, [firestore, user]);
 
@@ -32,9 +33,9 @@ export function VerificationHistory() {
 
   if (isUserLoading || isLoading) {
     return (
-      <div className="flex gap-4 overflow-hidden">
+      <div className="flex gap-6 overflow-hidden py-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="min-w-[300px] h-48 rounded-2xl bg-slate-100 animate-pulse" />
+          <div key={i} className="min-w-[320px] h-[380px] rounded-[2rem] bg-slate-100 animate-pulse shadow-inner" />
         ))}
       </div>
     );
@@ -42,37 +43,38 @@ export function VerificationHistory() {
 
   if (!user || !history || history.length === 0) {
     return (
-      <div className="text-center py-16 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-        <div className="bg-slate-50 p-4 rounded-full w-fit mx-auto mb-4 shadow-sm">
-          <ShieldCheck className="h-8 w-8 text-slate-300" />
+      <div className="text-center py-20 px-6 bg-slate-50/50 rounded-[3rem] border-2 border-dashed border-slate-200">
+        <div className="bg-white p-6 rounded-full w-fit mx-auto mb-6 shadow-xl text-slate-200">
+          <ShieldCheck className="h-12 w-12" />
         </div>
-        <p className="text-slate-500 font-semibold text-lg">Your history is clear</p>
-        <p className="text-sm text-slate-400">Past verifications will appear here in a beautiful slider.</p>
+        <h3 className="text-2xl font-bold font-headline text-slate-800 mb-2">Your Archive is Empty</h3>
+        <p className="text-slate-500 max-w-sm mx-auto">Start verifying claims to build your personal timeline of digital truth.</p>
       </div>
     );
   }
 
-  const getVerdictIcon = (verdict: string) => {
+  const getVerdictConfig = (verdict: string) => {
     switch (verdict) {
-      case 'Likely Accurate': return <CheckCircle2 className="h-4 w-4" />;
-      case 'Potentially Misleading': return <AlertCircle className="h-4 w-4" />;
-      default: return <HelpCircle className="h-4 w-4" />;
-    }
-  };
-
-  const getVerdictStyles = (verdict: string) => {
-    switch (verdict) {
-      case 'Likely Accurate': 
-        return "bg-emerald-50 text-emerald-700 border-emerald-100";
-      case 'Potentially Misleading': 
-        return "bg-rose-50 text-rose-700 border-rose-100";
-      default: 
-        return "bg-amber-50 text-amber-700 border-amber-100";
+      case 'Likely Accurate': return { 
+        icon: <CheckCircle2 className="h-5 w-5" />, 
+        styles: "bg-emerald-50 text-emerald-700 border-emerald-100/50",
+        accent: "bg-emerald-500"
+      };
+      case 'Potentially Misleading': return { 
+        icon: <AlertCircle className="h-5 w-5" />, 
+        styles: "bg-rose-50 text-rose-700 border-rose-100/50",
+        accent: "bg-rose-500"
+      };
+      default: return { 
+        icon: <HelpCircle className="h-5 w-5" />, 
+        styles: "bg-amber-50 text-amber-700 border-amber-100/50",
+        accent: "bg-amber-500"
+      };
     }
   };
 
   return (
-    <div className="relative px-12">
+    <div className="relative w-full">
       <Carousel
         opts={{
           align: "start",
@@ -80,50 +82,65 @@ export function VerificationHistory() {
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-4">
-          {history.map((item) => (
-            <CarouselItem key={item.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-              <Card className="h-full overflow-hidden border-none shadow-md hover:shadow-xl transition-all duration-300 bg-white group">
-                <CardHeader className="p-4 bg-slate-50/80 group-hover:bg-slate-100/80 transition-colors border-b">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center justify-between">
-                      <Badge className={`flex items-center gap-1.5 shadow-none font-bold px-2.5 py-1 ${getVerdictStyles(item.verdict)}`}>
-                        {getVerdictIcon(item.verdict)}
+        <CarouselContent className="-ml-6 py-8 px-2">
+          {history.map((item) => {
+            const config = getVerdictConfig(item.verdict);
+            return (
+              <CarouselItem key={item.id} className="pl-6 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
+                <Card className="h-[420px] group relative overflow-hidden border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgb(0,0,0,0.08)] transition-all duration-500 bg-white rounded-[2.5rem]">
+                  {/* Accent strip */}
+                  <div className={cn("absolute top-0 left-0 w-full h-1.5", config.accent)} />
+                  
+                  <CardContent className="p-8 h-full flex flex-col">
+                    {/* Header: Badge & Time */}
+                    <div className="flex items-center justify-between mb-8">
+                      <Badge className={cn("flex items-center gap-2 px-3 py-1.5 rounded-full border shadow-none font-bold text-[10px] uppercase tracking-wider", config.styles)}>
+                        {config.icon}
                         {item.verdict}
                       </Badge>
-                      <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-tighter bg-slate-50 px-2 py-1 rounded-md">
                         <Clock className="h-3 w-3" />
                         {formatDistanceToNow(new Date(item.checkedAt), { addSuffix: true })}
                       </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-5 space-y-4">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center gap-2 text-slate-400">
-                      <MessageSquare className="h-3 w-3" />
-                      <p className="text-[10px] font-black uppercase tracking-widest">Selected Text</p>
+
+                    {/* Content: The Quote */}
+                    <div className="relative flex-1 mb-6">
+                      <Quote className="absolute -top-4 -left-2 h-8 w-8 text-slate-100 -z-10" />
+                      <div className="space-y-3">
+                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">The Claim</p>
+                        <p className="text-base text-slate-800 font-semibold leading-relaxed line-clamp-4 italic">
+                          "{item.originalText}"
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3 italic">
-                      "{item.originalText}"
-                    </p>
-                  </div>
-                  
-                  {item.suggestedCorrection && (
-                    <div className="pt-4 border-t border-slate-50">
-                      <p className="text-[10px] font-black text-primary uppercase tracking-widest mb-1.5">Correction</p>
-                      <p className="text-xs text-slate-600 line-clamp-3">
-                        {item.suggestedCorrection}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </CarouselItem>
-          ))}
+
+                    {/* Footer: The Correction */}
+                    {item.suggestedCorrection ? (
+                      <div className="pt-6 border-t border-slate-50 group-hover:border-slate-100 transition-colors">
+                        <div className="flex items-center gap-2 mb-2">
+                          <ArrowRight className={cn("h-3 w-3", config.accent.replace('bg-', 'text-'))} />
+                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Analysis</p>
+                        </div>
+                        <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 font-medium">
+                          {item.suggestedCorrection}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="pt-6 border-t border-slate-50">
+                        <p className="text-xs text-slate-400 italic">No correction needed. Information verified as accurate.</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            );
+          })}
         </CarouselContent>
-        <CarouselPrevious className="hidden md:flex -left-6 border-2 h-12 w-12 bg-white hover:bg-slate-50 shadow-lg" />
-        <CarouselNext className="hidden md:flex -right-6 border-2 h-12 w-12 bg-white hover:bg-slate-50 shadow-lg" />
+        <div className="absolute -top-16 right-4 flex gap-3">
+          <CarouselPrevious className="static translate-y-0 h-10 w-10 border-2 bg-white hover:bg-slate-50 shadow-md rounded-2xl" />
+          <CarouselNext className="static translate-y-0 h-10 w-10 border-2 bg-white hover:bg-slate-50 shadow-md rounded-2xl" />
+        </div>
       </Carousel>
     </div>
   );
