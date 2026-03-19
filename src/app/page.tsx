@@ -1,4 +1,4 @@
-import { ShieldCheck, ArrowRight, Zap, Search, MessageSquare, CheckCircle } from "lucide-react";
+import { ShieldCheck, ArrowRight, Zap, CircleCheckBig } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextVerifier } from "@/components/fact-check/text-verifier";
 import Link from "next/link";
@@ -21,19 +21,10 @@ export default function Home() {
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <a href="#how-it-works" className="hover:text-primary transition-colors">How it works</a>
-            <Button asChild variant="link" className="p-0 h-auto font-medium hover:text-primary transition-colors">
-              <Link href="/extension-demo">Extension Demo</Link>
-            </Button>
+            <Link href="/extension-demo" className="hover:text-primary transition-colors">Extension Demo</Link>
             <a href="#" className="hover:text-primary transition-colors">Pricing</a>
           </nav>
-          <div className="flex items-center gap-3">
-            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full">
-              <Link href="/extension-demo">Demo</Link>
-            </Button>
-            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-full font-semibold px-4">
-              <a href="#verify">Get Started</a>
-            </Button>
-          </div>
+          <div className="w-10 md:hidden" /> {/* Spacer for mobile layout balance if needed */}
         </div>
       </header>
 
@@ -80,25 +71,23 @@ export default function Home() {
                   ].map((feature, i) => (
                     <div key={i} className="flex items-center gap-3">
                       <div className="bg-primary/10 p-1 rounded-full">
-                        <CheckCircle className="h-4 w-4 text-primary" />
+                        <CircleCheckBig className="h-4 w-4 text-primary" />
                       </div>
                       <span className="text-sm font-medium text-slate-700">{feature}</span>
                     </div>
                   ))}
                 </div>
-                <div className="pt-4">
-                  <Button asChild size="lg" className="rounded-full gap-2 px-8 py-6 text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-                    <Link href="/extension-demo">
-                      Try the Extension Demo <ArrowRight className="h-5 w-5" />
-                    </Link>
+                <Link href="/extension-demo" className="inline-block pt-4">
+                  <Button size="lg" className="rounded-full gap-2 px-8 py-6 text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                    Try the Extension Demo <ArrowRight className="h-5 w-5" />
                   </Button>
-                </div>
+                </Link>
               </div>
-              <Link href="/extension-demo" className="relative group block">
+              <Link href="/extension-demo" className="relative group cursor-pointer">
                 <div className="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-2xl group-hover:bg-primary/10 transition-colors" />
-                <div className="relative rounded-2xl border-4 border-slate-100 bg-white shadow-2xl overflow-hidden aspect-video flex items-center justify-center p-8 group-hover:border-primary/20 transition-colors">
+                <div className="relative rounded-2xl border-4 border-slate-100 bg-white shadow-2xl overflow-hidden aspect-video flex items-center justify-center p-8">
                   <div className="text-center space-y-4">
-                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
                       <Zap className="h-8 w-8 text-primary" />
                     </div>
                     <p className="font-bold text-slate-900">Interactive Demo Experience</p>
