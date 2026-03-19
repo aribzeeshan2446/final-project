@@ -23,7 +23,6 @@ export default function HistoryPage() {
             <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1.5 text-slate-600">
               <ArrowLeft className="h-4 w-4" /> Back to Verifier
             </Link>
-            <Link href="/extension-demo" className="hover:text-primary transition-colors text-slate-600">Extension Demo</Link>
           </nav>
           <div className="w-10 md:hidden" />
         </div>
