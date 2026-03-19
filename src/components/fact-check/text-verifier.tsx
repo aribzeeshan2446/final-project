@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw, Lightbulb } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCw } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
@@ -60,7 +60,7 @@ export function TextVerifier() {
         const docRef = doc(firestore, 'users', user.uid, 'verificationResults', verificationId);
         
         const verificationData = {
-          id: verificationId, // For security rules validation (must match doc ID)
+          id: verificationId,
           originalText: inputText,
           sourceUrl: window.location.href,
           verdict: output.verdict,
@@ -68,7 +68,6 @@ export function TextVerifier() {
           checkedAt: new Date().toISOString(),
         };
         
-        // Use setDocumentNonBlocking to ensure the doc ID matches the internal ID field
         setDocumentNonBlocking(docRef, verificationData, { merge: true });
       }
 
@@ -96,29 +95,6 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-8">
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 text-slate-500 mb-2">
-          <Lightbulb className="h-4 w-4 text-primary" />
-          <span className="text-sm font-semibold uppercase tracking-wider">Try a sample claim</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {SAMPLES.map((sample, i) => (
-            <Button
-              key={i}
-              variant="outline"
-              size="sm"
-              className="rounded-full text-xs bg-white hover:bg-primary/5 hover:text-primary hover:border-primary/30 transition-all border-slate-200 shadow-sm"
-              onClick={() => {
-                setInputText(sample);
-                setResult(null);
-              }}
-            >
-              {sample.substring(0, 50)}...
-            </Button>
-          ))}
-        </div>
-      </div>
-
       <Card className="border-2 shadow-xl overflow-hidden bg-white">
         <CardContent className="p-0">
           <div className="flex flex-col">
@@ -140,35 +116,52 @@ export function TextVerifier() {
               />
             </div>
             <div className="bg-slate-50 p-4 border-t flex items-center justify-between">
-              <p className="text-xs text-muted-foreground">
-                {inputText.length} characters
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-[10px] text-muted-foreground font-medium shrink-0">
+                  {inputText.length} chars
+                </p>
+                <div className="hidden sm:flex items-center gap-3 border-l border-slate-200 pl-4">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Try:</span>
+                  {SAMPLES.slice(0, 2).map((sample, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setInputText(sample);
+                        setResult(null);
+                      }}
+                      className="text-[10px] font-bold text-primary/70 hover:text-primary hover:underline transition-colors whitespace-nowrap"
+                    >
+                      "{sample.split(' ').slice(0, 3).join(' ')}..."
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div className="flex items-center gap-2">
                 {inputText && (
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="rounded-full h-10 w-10 p-0"
+                    className="rounded-full h-8 w-8 p-0"
                     onClick={() => {
                       setInputText("");
                       setResult(null);
                     }}
                   >
-                    <RefreshCw className="h-4 w-4 text-slate-400" />
+                    <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
                   </Button>
                 )}
                 <Button 
                   onClick={handleVerify} 
                   disabled={isVerifying || !inputText.trim()}
-                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 shadow-lg shadow-primary/20 h-10"
+                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 gap-2 shadow-lg shadow-primary/20 h-9 text-xs font-bold"
                 >
                   {isVerifying ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Verifying...
+                      <Loader2 className="h-3.5 w-3.5 animate-spin" /> Verifying...
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="h-4 w-4" /> Verify Accuracy
+                      <ShieldCheck className="h-3.5 w-3.5" /> Verify Accuracy
                     </>
                   )}
                 </Button>
@@ -178,7 +171,6 @@ export function TextVerifier() {
         </CardContent>
       </Card>
 
-      {/* Results Section */}
       {result && (
         <div className="grid md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
           <Card className="md:col-span-2 border-2 shadow-lg">
