@@ -10,24 +10,28 @@ export default function Home() {
       <header className="border-b bg-white sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-primary p-1.5 rounded-lg shadow-sm">
-              <ShieldCheck className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-xl font-bold font-headline tracking-tight">
-              FactCheck <span className="text-primary">AI</span>
-            </h1>
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="bg-primary p-1.5 rounded-lg shadow-sm group-hover:scale-105 transition-transform">
+                <ShieldCheck className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-xl font-bold font-headline tracking-tight">
+                FactCheck <span className="text-primary">AI</span>
+              </h1>
+            </Link>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
             <a href="#how-it-works" className="hover:text-primary transition-colors">How it works</a>
-            <Link href="/extension-demo" className="hover:text-primary transition-colors">Extension Demo</Link>
+            <Button asChild variant="link" className="p-0 h-auto font-medium hover:text-primary transition-colors">
+              <Link href="/extension-demo">Extension Demo</Link>
+            </Button>
             <a href="#" className="hover:text-primary transition-colors">Pricing</a>
           </nav>
           <div className="flex items-center gap-3">
-            <Link href="/extension-demo">
-              <Button variant="ghost" size="sm" className="hidden sm:flex">Demo</Button>
-            </Link>
-            <Button size="sm" className="bg-primary hover:bg-primary/90 rounded-full font-semibold px-4">
-              Get Started
+            <Button asChild variant="ghost" size="sm" className="hidden sm:flex rounded-full">
+              <Link href="/extension-demo">Demo</Link>
+            </Button>
+            <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-full font-semibold px-4">
+              <a href="#verify">Get Started</a>
             </Button>
           </div>
         </div>
@@ -35,7 +39,7 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero & Verifier Section */}
-        <section className="py-16 md:py-24 px-4 bg-gradient-to-b from-white to-slate-50">
+        <section id="verify" className="py-16 md:py-24 px-4 bg-gradient-to-b from-white to-slate-50">
           <div className="container mx-auto max-w-5xl space-y-12">
             <div className="text-center space-y-6 max-w-3xl mx-auto">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-bold animate-in fade-in slide-in-from-top-4 duration-500">
@@ -82,17 +86,19 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <Link href="/extension-demo" className="inline-block pt-4">
-                  <Button size="lg" className="rounded-full gap-2 px-8 py-6 text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
-                    Try the Extension Demo <ArrowRight className="h-5 w-5" />
+                <div className="pt-4">
+                  <Button asChild size="lg" className="rounded-full gap-2 px-8 py-6 text-lg shadow-xl shadow-primary/20 hover:scale-105 transition-transform">
+                    <Link href="/extension-demo">
+                      Try the Extension Demo <ArrowRight className="h-5 w-5" />
+                    </Link>
                   </Button>
-                </Link>
+                </div>
               </div>
               <Link href="/extension-demo" className="relative group block">
                 <div className="absolute -inset-4 bg-primary/5 rounded-[2rem] blur-2xl group-hover:bg-primary/10 transition-colors" />
-                <div className="relative rounded-2xl border-4 border-slate-100 bg-white shadow-2xl overflow-hidden aspect-video flex items-center justify-center p-8">
+                <div className="relative rounded-2xl border-4 border-slate-100 bg-white shadow-2xl overflow-hidden aspect-video flex items-center justify-center p-8 group-hover:border-primary/20 transition-colors">
                   <div className="text-center space-y-4">
-                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto">
+                    <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
                       <Zap className="h-8 w-8 text-primary" />
                     </div>
                     <p className="font-bold text-slate-900">Interactive Demo Experience</p>
@@ -115,7 +121,7 @@ export default function Home() {
             Providing real-time factual verification tools to combat misinformation across the digital landscape.
           </p>
           <div className="pt-4 border-t text-xs text-muted-foreground">
-            © 2025 FactCheck AI. All rights reserved.
+            © {new Date().getFullYear()} FactCheck AI. All rights reserved.
           </div>
         </div>
       </footer>
