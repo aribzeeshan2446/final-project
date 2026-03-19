@@ -54,16 +54,16 @@ export default function Home() {
           </div>
         </section>
 
-        {/* History Section */}
-        <section id="history" className="py-20 px-4 border-t bg-white">
-          <div className="container mx-auto max-w-5xl">
-            <div className="flex flex-col gap-8">
-              <div className="space-y-2">
+        {/* History Section - Now with a Slider */}
+        <section id="history" className="py-20 px-4 border-t bg-white overflow-hidden">
+          <div className="container mx-auto max-w-6xl">
+            <div className="flex flex-col gap-10">
+              <div className="space-y-2 text-center max-w-2xl mx-auto">
                 <h3 className="text-3xl font-bold font-headline tracking-tight text-slate-900">
                   Verification <span className="text-primary">History</span>
                 </h3>
                 <p className="text-muted-foreground">
-                  Review your previous fact-checks and tracking history.
+                  Your journey through factual clarity. Browse your most recent AI-powered checks.
                 </p>
               </div>
               <VerificationHistory />
