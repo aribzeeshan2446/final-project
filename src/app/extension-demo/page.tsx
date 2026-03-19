@@ -1,5 +1,5 @@
 import { MockBrowser } from "@/components/fact-check/mock-browser";
-import { ShieldCheck, Zap, Globe, MessageSquare, ArrowLeft } from "lucide-react";
+import { ShieldCheck, Zap, Globe, MessageSquare, ArrowLeft, History as HistoryIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -20,13 +20,14 @@ export default function ExtensionDemoPage() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <Button asChild variant="link" className="p-0 h-auto font-medium hover:text-primary transition-colors">
-              <Link href="/" className="flex items-center gap-1">
-                <ArrowLeft className="h-4 w-4" /> Back to Tools
-              </Link>
-            </Button>
+            <Link href="/" className="hover:text-primary transition-colors flex items-center gap-1.5 text-slate-600">
+              <ArrowLeft className="h-4 w-4" /> Verifier
+            </Link>
+            <Link href="/history" className="hover:text-primary transition-colors flex items-center gap-1.5 text-slate-600">
+              <HistoryIcon className="h-4 w-4" /> History
+            </Link>
           </nav>
-          <Button size="sm" className="bg-primary hover:bg-primary/90 rounded-full font-semibold">
+          <Button size="sm" className="bg-primary hover:bg-primary/90 rounded-full font-semibold px-4">
             Add to Chrome
           </Button>
         </div>

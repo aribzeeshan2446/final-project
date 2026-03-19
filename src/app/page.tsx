@@ -1,7 +1,6 @@
 import { ShieldCheck, ArrowRight, Zap, CircleCheckBig, History as HistoryIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TextVerifier } from "@/components/fact-check/text-verifier";
-import { VerificationHistory } from "@/components/fact-check/history";
 import Link from "next/link";
 
 export default function Home() {
@@ -21,11 +20,11 @@ export default function Home() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <a href="#history" className="hover:text-primary transition-colors flex items-center gap-2">
+            <Link href="/history" className="hover:text-primary transition-colors flex items-center gap-2 text-slate-600">
               <HistoryIcon className="h-4 w-4" /> History
-            </a>
-            <Link href="/extension-demo" className="hover:text-primary transition-colors">Extension Demo</Link>
-            <a href="#" className="hover:text-primary transition-colors">Pricing</a>
+            </Link>
+            <Link href="/extension-demo" className="hover:text-primary transition-colors text-slate-600">Extension Demo</Link>
+            <a href="#" className="hover:text-primary transition-colors text-slate-600">Pricing</a>
           </nav>
           <div className="w-10 md:hidden" />
         </div>
@@ -50,23 +49,6 @@ export default function Home() {
 
             <div className="animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
               <TextVerifier />
-            </div>
-          </div>
-        </section>
-
-        {/* History Section - Now with a Slider */}
-        <section id="history" className="py-20 px-4 border-t bg-white overflow-hidden">
-          <div className="container mx-auto max-w-6xl">
-            <div className="flex flex-col gap-10">
-              <div className="space-y-2 text-center max-w-2xl mx-auto">
-                <h3 className="text-3xl font-bold font-headline tracking-tight text-slate-900">
-                  Verification <span className="text-primary">History</span>
-                </h3>
-                <p className="text-muted-foreground">
-                  Your journey through factual clarity. Browse your most recent AI-powered checks.
-                </p>
-              </div>
-              <VerificationHistory />
             </div>
           </div>
         </section>
