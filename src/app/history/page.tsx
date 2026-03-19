@@ -41,7 +41,7 @@ export default function HistoryPage() {
               <span>Intelligence Archive</span>
             </div>
             <h2 className="text-3xl md:text-5xl font-bold font-headline tracking-tight text-slate-900 leading-tight">
-              Journey of <span className="text-primary italic">Truth</span>
+              Verification <span className="text-primary italic">History</span>
             </h2>
             <p className="text-slate-500 text-sm md:text-base leading-relaxed">
               Every claim you've scrutinized, stored in a secure timeline.
