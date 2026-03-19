@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Search, Globe, ChevronLeft, ChevronRight, RotateCcw, ShieldCheck } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Search, Globe, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 export function MockBrowser() {
   const [selectedText, setSelectedText] = useState("");
@@ -17,14 +17,15 @@ export function MockBrowser() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
 
   const handleTextSelection = () => {
     const selection = window.getSelection();
     const text = selection?.toString().trim();
     
-    if (text && text.length > 5) {
-      const range = selection?.getRangeAt(0);
-      const rect = range?.getBoundingClientRect();
+    if (text && text.length > 5 && selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
       
       if (rect) {
         setTooltipPos({
@@ -42,6 +43,9 @@ export function MockBrowser() {
   const verifyText = async () => {
     if (!selectedText) return;
     
+    // Clear browser selection for cleaner UI
+    window.getSelection()?.removeAllRanges();
+    
     setShowTooltip(false);
     setIsVerifying(true);
     setResult(null);
@@ -51,6 +55,11 @@ export function MockBrowser() {
       setResult(output);
     } catch (error) {
       console.error("Verification failed", error);
+      toast({
+        variant: "destructive",
+        title: "Verification Error",
+        description: "We couldn't reach the AI service. Please ensure your API key is configured correctly.",
+      });
     } finally {
       setIsVerifying(false);
     }
