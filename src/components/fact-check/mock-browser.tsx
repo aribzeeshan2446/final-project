@@ -44,18 +44,21 @@ export function MockBrowser() {
   const { toast } = useToast();
 
   const handleTextSelection = () => {
+    // Small timeout to ensure window.getSelection() is populated
     setTimeout(() => {
       const selection = window.getSelection();
       const text = selection?.toString().trim();
       
-      if (text && text.length > 5 && selection && selection.rangeCount > 0) {
+      if (text && text.length > 5 && selection && selection.rangeCount > 0 && containerRef.current) {
         const range = selection.getRangeAt(0);
         const rect = range.getBoundingClientRect();
+        const containerRect = containerRef.current.getBoundingClientRect();
         
         if (rect) {
+          // Calculate position relative to the container for "absolute" positioning
           setTooltipPos({
-            x: rect.left + rect.width / 2,
-            y: rect.top - 10
+            x: rect.left - containerRect.left + rect.width / 2,
+            y: rect.top - containerRect.top - 10
           });
           setSelectedText(text);
           setShowTooltip(true);
@@ -105,7 +108,7 @@ export function MockBrowser() {
       setScanResult(output);
       toast({
         title: "Scan Complete",
-        description: `Identified ${output.claims.length} claims. Factual Health: ${output.overallHealth}%`,
+        description: `Identified ${output.claims.length} claims.`,
       });
     } catch (error) {
       toast({
@@ -229,7 +232,7 @@ export function MockBrowser() {
             <div className="prose prose-slate max-w-none text-lg text-slate-900 font-bold leading-relaxed space-y-4">
               {renderHighlightedContent()}
               
-              <p className="italic text-slate-500 text-base pt-4 border-t border-slate-100">
+              <p className="italic text-slate-800 text-base pt-4 border-t border-slate-100 font-bold">
                 {scanResult 
                   ? "Page analyzed. Hover over highlighted text to see details." 
                   : "Highlight specific text or click 'Scan Page' to verify everything at once."}
@@ -237,10 +240,10 @@ export function MockBrowser() {
             </div>
           </div>
 
-          {/* Selection Tooltip */}
+          {/* Selection Tooltip - Absolute within Container */}
           {showTooltip && (
             <div 
-              className="fixed z-50 animate-in fade-in zoom-in duration-200"
+              className="absolute z-50 animate-in fade-in zoom-in duration-200 pointer-events-auto"
               style={{ 
                 left: tooltipPos.x, 
                 top: tooltipPos.y, 
@@ -271,7 +274,7 @@ export function MockBrowser() {
                 </div>
                 <div>
                   <h3 className="font-black text-lg uppercase tracking-tight text-slate-900">Verifying Claim</h3>
-                  <p className="text-sm text-slate-600 font-bold">Scouring reliable global indices...</p>
+                  <p className="text-sm text-slate-900 font-bold">Scouring reliable global indices...</p>
                 </div>
               </div>
             </div>
@@ -297,7 +300,7 @@ export function MockBrowser() {
         {scanResult && (
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-xl space-y-6 animate-in slide-in-from-right-4">
             <div className="flex items-center justify-between">
-              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500">Page Health</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Page Health</h4>
               <Zap className="h-4 w-4 text-primary" />
             </div>
             
@@ -316,11 +319,11 @@ export function MockBrowser() {
                   {scanResult.overallHealth}%
                 </div>
               </div>
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Aggregate Trust Score</p>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Aggregate Trust Score</p>
             </div>
 
             <div className="space-y-3">
-              <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 border-b border-slate-100 pb-2">Analysis Breakdown</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-slate-900 border-b border-slate-100 pb-2">Analysis Breakdown</p>
               {scanResult.claims.map((claim, i) => (
                 <div key={i} className="flex items-start gap-2 group cursor-help border-b border-slate-50 pb-2 last:border-0">
                   {claim.verdict === 'Accurate' ? (
@@ -332,7 +335,7 @@ export function MockBrowser() {
                     <p className="text-[10px] font-black text-slate-900 line-clamp-1 group-hover:text-primary transition-colors uppercase tracking-tight">
                       {claim.claimText}
                     </p>
-                    <p className="text-[9px] text-slate-600 font-bold italic line-clamp-2">
+                    <p className="text-[9px] text-slate-900 font-bold italic line-clamp-2">
                       {claim.context}
                     </p>
                   </div>
@@ -343,25 +346,11 @@ export function MockBrowser() {
             <Button 
               variant="outline" 
               size="sm" 
-              className="w-full rounded-xl h-9 text-[9px] font-black uppercase tracking-widest border-slate-200 text-slate-900"
+              className="w-full rounded-xl h-9 text-[9px] font-black uppercase tracking-widest border-slate-200 text-slate-900 font-bold"
               onClick={() => setScanResult(null)}
             >
               Clear Analysis
             </Button>
-          </div>
-        )}
-
-        {!result && !scanResult && (
-          <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-2xl p-10 text-center space-y-4">
-            <div className="bg-white p-3 rounded-full w-fit mx-auto shadow-sm border border-slate-200">
-              <ShieldCheck className="h-6 w-6 text-slate-400" />
-            </div>
-            <div>
-              <p className="text-xs font-black text-slate-900 uppercase tracking-widest">Waiting for Input</p>
-              <p className="text-[10px] text-slate-600 font-bold leading-relaxed mt-2 uppercase tracking-wide">
-                Highlight text in the browser or use the "Scan Page" feature to begin verification.
-              </p>
-            </div>
           </div>
         )}
       </div>

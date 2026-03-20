@@ -96,7 +96,7 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
           </CardTitle>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:bg-white/50" onClick={handleAudio} disabled={isGeneratingAudio}>
+          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-900 hover:bg-white/50" onClick={handleAudio} disabled={isGeneratingAudio}>
             {isGeneratingAudio ? <Loader2 className="h-3 w-3 animate-spin" /> : isPlaying ? 'Pause' : 'Listen'}
           </Button>
           <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-white/50" onClick={handleCopy}>
@@ -110,7 +110,7 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
 
       <CardContent className="p-8 space-y-8">
         <div className="space-y-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Analysis Summary</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Analysis Summary</p>
           <p className="text-xl leading-snug font-bold text-slate-900">{context || "This claim aligns with verified factual records."}</p>
         </div>
 
@@ -123,7 +123,7 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
 
         {sources && sources.length > 0 && (
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Sources & Evidence</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Sources & Evidence</p>
             <div className="grid gap-3">
               {sources.map((s, i) => (
                 <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors shadow-sm">
