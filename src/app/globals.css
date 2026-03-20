@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    /* Forest Clarity Palette */
+    /* Forest Clarity 2.0 - More Vibrant & Grounded */
     --background: 0 0% 100%;
     --foreground: 222 47% 8%; /* Slate 950 */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 8%;
-    --primary: 162 94% 8%; /* Deepest Forest Green */
+    --primary: 162 94% 12%; /* Deeper, richer Forest Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 20% 98%;
-    --secondary-foreground: 222 47% 8%;
+    --secondary: 162 20% 98%;
+    --secondary-foreground: 162 94% 12%;
     --muted: 210 20% 96%;
-    --muted-foreground: 215 25% 20%; /* Darker muted text for high contrast */
-    --accent: 160 51% 94%; 
-    --accent-foreground: 162 94% 8%;
+    --muted-foreground: 215 25% 20%;
+    --accent: 162 50% 96%; 
+    --accent-foreground: 162 94% 12%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 90%;
-    --input: 214.3 31.8% 90%;
-    --ring: 162 94% 8%;
+    --border: 162 20% 90%;
+    --input: 162 20% 90%;
+    --ring: 162 94% 12%;
     --radius: 1.5rem;
   }
 }
@@ -40,7 +40,11 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/95 backdrop-blur-2xl border border-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)];
+    @apply bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-[0_8px_32px_rgba(0,0,0,0.08)];
+  }
+
+  .premium-header {
+    @apply bg-white/95 backdrop-blur-md border-b border-primary/10 shadow-sm sticky top-0 z-50;
   }
 
   .snow-drift {

@@ -103,7 +103,7 @@ export function TextVerifier() {
               ) : (
                 <Textarea
                   placeholder="Paste a claim or statement here to fact-check..."
-                  className="min-h-[160px] text-3xl border border-slate-300/60 rounded-2xl focus-visible:ring-1 focus-visible:ring-primary/20 px-8 py-6 bg-white/40 resize-none placeholder:text-slate-900/60 text-slate-900 font-black tracking-tight leading-tight"
+                  className="min-h-[180px] text-3xl border-2 border-slate-200/80 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/20 px-10 py-8 bg-white/60 resize-none placeholder:text-slate-900/40 text-slate-900 font-black tracking-tight leading-tight transition-all duration-300"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
@@ -135,7 +135,7 @@ export function TextVerifier() {
               <Button 
                 onClick={handleVerify} 
                 disabled={isVerifying || (!inputText.trim() && !selectedImage)}
-                className="bg-primary hover:bg-primary/95 text-white rounded-full px-12 h-14 font-black shadow-lg uppercase tracking-widest text-xs"
+                className="bg-primary hover:bg-primary/95 text-white rounded-full px-12 h-14 font-black shadow-lg uppercase tracking-widest text-xs transition-all active:scale-95"
               >
                 {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-3" /> Verifying</> : <><ShieldCheck className="h-4 w-4 mr-3" /> Verify Claim</>}
               </Button>

@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col selection:bg-primary/30">
       {/* Header */}
-      <header className="border-b border-slate-200/60 bg-white/90 backdrop-blur-md sticky top-0 z-50">
+      <header className="premium-header">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
