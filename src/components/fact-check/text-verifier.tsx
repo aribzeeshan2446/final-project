@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -24,13 +25,14 @@ export function TextVerifier() {
   const [result, setResult] = useState<{
     verdict: 'Likely Accurate' | 'Needs Verification' | 'Potentially Misleading';
     suggestedCorrectionOrContext: string | null;
+    reasoning: string;
+    sources: { title: string; url: string }[];
   } | null>(null);
   
   const { toast } = useToast();
   const { firestore, auth } = useFirebase();
   const { user } = useUser();
 
-  // Ensure user is signed in anonymously to save history
   useEffect(() => {
     if (!user && auth) {
       initiateAnonymousSignIn(auth);
@@ -54,7 +56,6 @@ export function TextVerifier() {
       const output = await verifySelectedTextAccuracy({ selectedText: inputText });
       setResult(output);
 
-      // Save to Firestore history if user is authenticated
       if (user && firestore) {
         const verificationId = crypto.randomUUID();
         const docRef = doc(firestore, 'users', user.uid, 'verificationResults', verificationId);
@@ -65,6 +66,8 @@ export function TextVerifier() {
           sourceUrl: window.location.href,
           verdict: output.verdict,
           suggestedCorrection: output.suggestedCorrectionOrContext,
+          reasoning: output.reasoning,
+          sources: output.sources,
           checkedAt: new Date().toISOString(),
         };
         
@@ -173,18 +176,20 @@ export function TextVerifier() {
 
       {result && (
         <div className="grid md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-          <Card className="md:col-span-2 border-2 shadow-lg">
-            <CardContent className="p-6">
+          <Card className="md:col-span-2 border shadow-lg overflow-hidden">
+            <CardContent className="p-0">
               <VerdictCard 
                 verdict={result.verdict} 
                 context={result.suggestedCorrectionOrContext}
-                className="border-none shadow-none p-0"
+                reasoning={result.reasoning}
+                sources={result.sources}
+                className="border-none shadow-none rounded-none"
               />
             </CardContent>
           </Card>
           
-          <Card className="border-2 shadow-lg flex flex-col items-center justify-center p-6 text-center space-y-4 bg-slate-50/50">
-            <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Trust Score</h4>
+          <Card className="border shadow-lg flex flex-col items-center justify-center p-6 text-center space-y-4 bg-white">
+            <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Trust Index</h4>
             <div className="relative">
               <svg className="w-32 h-32 transform -rotate-90">
                 <circle
@@ -194,7 +199,7 @@ export function TextVerifier() {
                   stroke="currentColor"
                   strokeWidth="8"
                   fill="transparent"
-                  className="text-slate-200"
+                  className="text-slate-100"
                 />
                 <circle
                   cx="64"
@@ -205,19 +210,21 @@ export function TextVerifier() {
                   fill="transparent"
                   strokeDasharray={364.4}
                   strokeDashoffset={364.4 - (364.4 * (score?.value || 0)) / 100}
-                  className={score?.color}
+                  className={cn("transition-all duration-1000", score?.color)}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={`text-3xl font-bold ${score?.color}`}>{score?.value}%</span>
+                <span className={cn("text-3xl font-black", score?.color)}>{score?.value}%</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              Based on comparison with known factual datasets and reliable news indices.
+            <p className="text-xs text-muted-foreground leading-relaxed px-4">
+              Factual confidence level based on current AI indexing.
             </p>
-            <Button variant="outline" size="sm" className="w-full rounded-full gap-2" onClick={() => {setInputText(""); setResult(null);}}>
-              <RefreshCw className="h-3 w-3" /> New Check
-            </Button>
+            <div className="pt-4 w-full">
+              <Button variant="outline" size="sm" className="w-full rounded-full gap-2 border-slate-200" onClick={() => {setInputText(""); setResult(null);}}>
+                <RefreshCw className="h-3 w-3" /> New Verification
+              </Button>
+            </div>
           </Card>
         </div>
       )}

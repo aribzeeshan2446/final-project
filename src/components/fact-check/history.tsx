@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from "react";
@@ -12,7 +13,7 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, Quote, Activity } from "lucide-react";
+import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, Quote, Activity, ExternalLink } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -101,12 +102,10 @@ export function VerificationHistory() {
             const config = getVerdictConfig(item.verdict);
             return (
               <CarouselItem key={item.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <Card className="h-[380px] group relative overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 bg-white rounded-[2.5rem]">
-                  {/* Visual Background Decoration */}
+                <Card className="h-[440px] group relative overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 bg-white rounded-[2.5rem]">
                   <div className={cn("absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-[0.03] group-hover:opacity-5 transition-opacity", config.accent)} />
                   
                   <CardContent className="p-8 h-full flex flex-col">
-                    {/* Header: Badge & Trust Score */}
                     <div className="flex items-start justify-between mb-6">
                       <div className="space-y-3">
                         <Badge className={cn("flex items-center gap-1.5 px-3 py-1 rounded-full border shadow-none font-bold text-[9px] uppercase tracking-widest", config.styles)}>
@@ -119,7 +118,6 @@ export function VerificationHistory() {
                         </div>
                       </div>
                       
-                      {/* Mini Score Circle */}
                       <div className="relative w-10 h-10">
                         <svg className="w-full h-full transform -rotate-90">
                           <circle cx="20" cy="20" r="17" stroke="currentColor" strokeWidth="3" fill="transparent" className="text-slate-50" />
@@ -136,26 +134,38 @@ export function VerificationHistory() {
                       </div>
                     </div>
 
-                    {/* Content: The Claim */}
-                    <div className="relative flex-1 mb-6 overflow-hidden">
+                    <div className="relative flex-1 mb-4 overflow-hidden">
                       <Quote className="absolute -top-2 -left-2 h-8 w-8 text-slate-50 -z-10 group-hover:text-slate-100 transition-colors" />
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <p className="text-[9px] font-black text-primary uppercase tracking-widest">The Subject</p>
-                        <p className="text-base text-slate-900 font-bold leading-relaxed line-clamp-4 group-hover:text-primary transition-colors">
+                        <p className="text-sm text-slate-900 font-bold leading-relaxed line-clamp-3 group-hover:text-primary transition-colors">
                           "{item.originalText}"
                         </p>
                       </div>
                     </div>
 
-                    {/* Footer: The Analysis */}
-                    <div className="pt-6 border-t border-slate-50">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className={cn("h-1 w-1 rounded-full", config.accent)} />
-                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">AI Analysis</p>
+                    <div className="space-y-4 pt-4 border-t border-slate-50">
+                      <div>
+                        <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">AI Analysis</p>
+                        <p className="text-[11px] text-slate-500 leading-relaxed line-clamp-2 font-medium italic">
+                          {item.suggestedCorrection || "Verified accuracy matches our factual indices."}
+                        </p>
                       </div>
-                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 font-medium italic">
-                        {item.suggestedCorrection || "Verified accuracy matches our factual indices."}
-                      </p>
+                      
+                      {item.sources && item.sources.length > 0 && (
+                        <div>
+                          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Top Source</p>
+                          <a 
+                            href={item.sources[0].url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-[10px] font-bold text-primary hover:underline group/link"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                            {item.sources[0].title}
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
