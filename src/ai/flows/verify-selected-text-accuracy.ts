@@ -4,8 +4,6 @@
  * @fileOverview A Genkit flow for verifying the factual accuracy of selected text from a webpage.
  *
  * - verifySelectedTextAccuracy - A function that handles the factual accuracy verification process.
- * - VerifySelectedTextAccuracyInput - The input type for the verifySelectedTextAccuracy function.
- * - VerifySelectedTextAccuracyOutput - The return type for the verifySelectedTextAccuracy function.
  */
 
 import {ai} from '@/ai/genkit';
@@ -14,6 +12,7 @@ import {z} from 'genkit';
 const SourceSchema = z.object({
   title: z.string().describe('The name of the source or article.'),
   url: z.string().describe('The URL of the source.'),
+  reliability: z.enum(['High', 'Medium', 'Mixed']).describe('The AI assessed reliability of the source.'),
 });
 
 const VerifySelectedTextAccuracyInputSchema = z.object({
@@ -26,6 +25,7 @@ const VerifySelectedTextAccuracyOutputSchema = z.object({
   suggestedCorrectionOrContext: z.string().nullable().describe('A brief suggested correction or additional context.'),
   reasoning: z.string().describe('Detailed explanation of why this verdict was reached.'),
   sources: z.array(SourceSchema).describe('Authoritative sources that back up this analysis.'),
+  recommendedSearchQuery: z.string().describe('A specific search query the user can use to verify this claim further.'),
 });
 export type VerifySelectedTextAccuracyOutput = z.infer<typeof VerifySelectedTextAccuracyOutputSchema>;
 
@@ -42,7 +42,9 @@ const verifySelectedTextAccuracyPrompt = ai.definePrompt({
 1. Determine the verdict: 'Likely Accurate', 'Needs Verification', or 'Potentially Misleading'.
 2. Provide a brief correction if needed.
 3. Provide a detailed reasoning (2-3 sentences) explaining the historical or scientific context.
-4. List 2-3 high-authority sources (e.g., Wikipedia, NASA, BBC, Britannica, specialized scientific journals) that verify or debunk this claim. If the source URL is not known exactly, provide a highly probable search-based URL for that source.
+4. List 2-3 high-authority sources (e.g., Wikipedia, NASA, BBC, Britannica). 
+5. For each source, assess its reliability: 'High' for primary/peer-reviewed, 'Medium' for mainstream news, 'Mixed' for opinion-heavy or user-generated content.
+6. Provide a 'recommendedSearchQuery' that would help a user find more independent verification of this claim.
 
 Selected Text:
 {{{selectedText}}}`,

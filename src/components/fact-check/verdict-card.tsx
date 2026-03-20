@@ -1,17 +1,19 @@
 
 "use client";
 
-import { CheckCircle2, AlertCircle, HelpCircle, ArrowRight, ExternalLink, Info, Copy, Check, Volume2, Loader2, Play, Pause, X } from "lucide-react";
+import { CheckCircle2, AlertCircle, HelpCircle, ArrowRight, ExternalLink, Info, Copy, Check, Volume2, Loader2, Play, Pause, X, Search, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { generateTruthAudio } from "@/ai/flows/text-to-speech-flow";
+import { Badge } from "@/components/ui/badge";
 
 interface Source {
   title: string;
   url: string;
+  reliability?: 'High' | 'Medium' | 'Mixed';
 }
 
 interface VerdictCardProps {
@@ -19,13 +21,13 @@ interface VerdictCardProps {
   context: string | null;
   reasoning?: string;
   sources?: Source[];
+  recommendedSearchQuery?: string;
   className?: string;
   onClose?: () => void;
 }
 
-export function VerdictCard({ verdict, context, reasoning, sources, className, onClose }: VerdictCardProps) {
+export function VerdictCard({ verdict, context, reasoning, sources, recommendedSearchQuery, className, onClose }: VerdictCardProps) {
   const [copied, setCopied] = useState(false);
-  const [copiedCorrection, setCopiedCorrection] = useState(false);
   const [isGeneratingAudio, setIsGeneratingAudio] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -64,44 +66,19 @@ export function VerdictCard({ verdict, context, reasoning, sources, className, o
   const styles = getStyles();
 
   const handleCopyReport = () => {
-    const reportText = `FactCheck AI Report
-Verdict: ${verdict}
-Summary: ${context || "No summary provided."}
-${reasoning ? `\nDeep Analysis: ${reasoning}` : ""}
-${sources && sources.length > 0 ? `\nSources:\n${sources.map(s => `- ${s.title}: ${s.url}`).join('\n')}` : ""}
-\nVerified via FactCheck AI`;
-
+    const reportText = `FactCheck AI Report\nVerdict: ${verdict}\nSummary: ${context || "No summary provided."}\n${reasoning ? `\nDeep Analysis: ${reasoning}` : ""}\nVerified via FactCheck AI`;
     navigator.clipboard.writeText(reportText);
     setCopied(true);
-    toast({
-      title: "Report Copied",
-      description: "Verification details copied to your clipboard.",
-    });
+    toast({ title: "Report Copied", description: "Verification details copied to your clipboard." });
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleCopyCorrection = () => {
-    if (!context) return;
-    navigator.clipboard.writeText(context);
-    setCopiedCorrection(true);
-    toast({
-      title: "Correction Copied",
-      description: "Suggested correction copied to clipboard.",
-    });
-    setTimeout(() => setCopiedCorrection(false), 2000);
   };
 
   const handleToggleAudio = async () => {
     if (audioUrl) {
-      if (isPlaying) {
-        audioRef.current?.pause();
-      } else {
-        audioRef.current?.play();
-      }
+      if (isPlaying) audioRef.current?.pause(); else audioRef.current?.play();
       setIsPlaying(!isPlaying);
       return;
     }
-
     setIsGeneratingAudio(true);
     try {
       const narrationText = `Verdict: ${verdict}. Summary: ${context || "This claim matches reliable data."} ${reasoning ? `Analysis: ${reasoning}` : ""}`;
@@ -109,22 +86,20 @@ ${sources && sources.length > 0 ? `\nSources:\n${sources.map(s => `- ${s.title}:
       setAudioUrl(media);
       setIsPlaying(true);
     } catch (error) {
-      console.error("Audio generation failed", error);
-      toast({
-        variant: "destructive",
-        title: "Voice of Truth Error",
-        description: "Could not generate audio narration at this time.",
-      });
+      toast({ variant: "destructive", title: "Audio Error", description: "Could not generate narration." });
     } finally {
       setIsGeneratingAudio(false);
     }
   };
 
-  useEffect(() => {
-    if (audioUrl && isPlaying && audioRef.current) {
-      audioRef.current.play();
+  const getReliabilityStyles = (reliability?: string) => {
+    switch (reliability) {
+      case 'High': return "bg-emerald-50 text-emerald-600 border-emerald-100";
+      case 'Medium': return "bg-blue-50 text-blue-600 border-blue-100";
+      case 'Mixed': return "bg-amber-50 text-amber-600 border-amber-100";
+      default: return "bg-slate-50 text-slate-500 border-slate-100";
     }
-  }, [audioUrl, isPlaying]);
+  };
 
   return (
     <Card className={cn("overflow-hidden border shadow-xl bg-white", styles.borderColor, className)}>
@@ -136,76 +111,24 @@ ${sources && sources.length > 0 ? `\nSources:\n${sources.map(s => `- ${s.title}:
           </CardTitle>
         </div>
         <div className="flex items-center gap-1.5">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-7 gap-1.5 rounded-full hover:bg-white/50 text-[9px] font-bold uppercase tracking-tight text-slate-500 px-3"
-            onClick={handleToggleAudio}
-            disabled={isGeneratingAudio}
-          >
-            {isGeneratingAudio ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : isPlaying ? (
-              <>
-                <Pause className="h-3 w-3" /> Stop
-              </>
-            ) : (
-              <>
-                <Volume2 className="h-3 w-3" /> Listen
-              </>
-            )}
+          <Button variant="ghost" size="sm" className="h-7 gap-1.5 rounded-full hover:bg-white/50 text-[9px] font-bold uppercase tracking-tight text-slate-500 px-3" onClick={handleToggleAudio} disabled={isGeneratingAudio}>
+            {isGeneratingAudio ? <Loader2 className="h-3 w-3 animate-spin" /> : isPlaying ? <><Pause className="h-3 w-3" /> Stop</> : <><Volume2 className="h-3 w-3" /> Listen</>}
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="h-7 w-7 p-0 rounded-full hover:bg-white/50" 
-            onClick={handleCopyReport}
-            title="Copy Full Report"
-          >
+          <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-full hover:bg-white/50" onClick={handleCopyReport}>
             {copied ? <Check className="h-3.5 w-3.5 text-primary" /> : <Copy className="h-3.5 w-3.5 text-slate-400" />}
           </Button>
-          {onClose && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="h-7 w-7 p-0 rounded-full hover:bg-white/50 ml-1" 
-              onClick={onClose}
-            >
-              <X className="h-4 w-4 text-slate-400" />
-            </Button>
-          )}
+          {onClose && <Button variant="ghost" size="sm" className="h-7 w-7 p-0 rounded-full hover:bg-white/50 ml-1" onClick={onClose}><X className="h-4 w-4 text-slate-400" /></Button>}
         </div>
       </CardHeader>
       
-      {audioUrl && (
-        <audio 
-          ref={audioRef} 
-          src={audioUrl} 
-          onEnded={() => setIsPlaying(false)} 
-          className="hidden" 
-        />
-      )}
+      {audioUrl && <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} className="hidden" />}
 
       <CardContent className="pt-5 pb-5 px-6 space-y-5">
         <div className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Verdict Summary</p>
-            {context && (
-              <Button 
-                variant="link" 
-                size="sm" 
-                className="h-auto p-0 text-[9px] font-bold text-primary uppercase tracking-tight"
-                onClick={handleCopyCorrection}
-              >
-                {copiedCorrection ? "Copied!" : "Copy Narrative"}
-              </Button>
-            )}
-          </div>
+          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Verdict Summary</p>
           <div className="flex items-start gap-3">
             <ArrowRight className="h-3.5 w-3.5 mt-0.5 text-slate-300 shrink-0" />
-            <p className="text-sm leading-relaxed font-medium text-slate-900">
-              {context || "This claim is consistent with reliable data sources."}
-            </p>
+            <p className="text-sm leading-relaxed font-medium text-slate-900">{context || "This claim is consistent with reliable data sources."}</p>
           </div>
         </div>
 
@@ -213,31 +136,42 @@ ${sources && sources.length > 0 ? `\nSources:\n${sources.map(s => `- ${s.title}:
           <div className="space-y-2.5 p-4 rounded-xl bg-slate-50 border border-slate-100">
             <div className="flex items-center gap-2">
               <Info className="h-3 w-3 text-primary" />
-              <p className="text-[9px] font-black uppercase tracking-widest text-primary">AI Deep Analysis</p>
+              <p className="text-[9px] font-black uppercase tracking-widest text-primary">AI Analysis</p>
             </div>
-            <p className="text-[11px] text-slate-600 leading-relaxed italic">
-              {reasoning}
-            </p>
+            <p className="text-[11px] text-slate-600 leading-relaxed italic">{reasoning}</p>
           </div>
         )}
 
         {sources && sources.length > 0 && (
-          <div className="space-y-2.5">
+          <div className="space-y-3">
             <p className="text-[9px] font-black uppercase tracking-widest text-slate-400">Verified Sources</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-col gap-2">
               {sources.map((source, i) => (
-                <a 
-                  key={i}
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[9px] font-bold text-slate-700 hover:border-primary hover:text-primary transition-all group"
-                >
-                  <ExternalLink className="h-2.5 w-2.5 group-hover:scale-110 transition-transform" />
-                  {source.title}
-                </a>
+                <div key={i} className="flex items-center justify-between gap-4 p-2 rounded-lg border border-slate-50 hover:bg-slate-50 transition-colors group">
+                  <a href={source.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[10px] font-bold text-slate-700 hover:text-primary transition-colors flex-1 min-w-0">
+                    <ExternalLink className="h-3 w-3 shrink-0" />
+                    <span className="truncate">{source.title}</span>
+                  </a>
+                  <Badge variant="outline" className={cn("h-5 px-1.5 text-[8px] font-black uppercase tracking-tight whitespace-nowrap", getReliabilityStyles(source.reliability))}>
+                    <Shield className="h-2 w-2 mr-1" />
+                    {source.reliability || 'Assessed'}
+                  </Badge>
+                </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {recommendedSearchQuery && (
+          <div className="pt-2">
+            <Button 
+              variant="outline" 
+              className="w-full h-9 rounded-xl border-dashed border-2 hover:border-primary/50 hover:bg-primary/5 group"
+              onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(recommendedSearchQuery)}`, '_blank')}
+            >
+              <Search className="h-3.5 w-3.5 mr-2 text-primary group-hover:scale-110 transition-transform" />
+              <span className="text-[10px] font-black uppercase tracking-widest">Research Further</span>
+            </Button>
           </div>
         )}
       </CardContent>

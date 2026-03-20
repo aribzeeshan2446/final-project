@@ -5,64 +5,33 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "VerificationResult",
       "type": "object",
-      "description": "Represents a single instance of a factual accuracy check performed on selected web text, storing its outcome and related details for 'chat history' or review.",
+      "description": "Represents a single instance of a factual accuracy check performed on selected web text.",
       "properties": {
-        "id": {
-          "type": "string",
-          "description": "Unique identifier for the VerificationResult entity."
-        },
-        "originalText": {
-          "type": "string",
-          "description": "The exact snippet of text selected by the user from a webpage that was submitted for factual verification."
-        },
-        "sourceUrl": {
-          "type": "string",
-          "description": "The URL of the webpage from which the 'originalText' was selected.",
-          "format": "uri"
-        },
-        "verdict": {
-          "type": "string",
-          "description": "The AI's concise assessment of the factual accuracy of the 'originalText' (e.g., 'Likely Accurate', 'Needs Verification', 'Potentially Misleading')."
-        },
-        "suggestedCorrection": {
-          "type": "string",
-          "description": "An optional brief correction or additional context provided by the AI if inaccuracies or ambiguities were identified in the 'originalText'."
-        },
-        "reasoning": {
-          "type": "string",
-          "description": "Detailed AI reasoning explaining why the specific verdict was chosen."
-        },
+        "id": { "type": "string" },
+        "originalText": { "type": "string" },
+        "sourceUrl": { "type": "string", "format": "uri" },
+        "verdict": { "type": "string" },
+        "suggestedCorrection": { "type": "string" },
+        "reasoning": { "type": "string" },
+        "recommendedSearchQuery": { "type": "string" },
         "sources": {
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
               "title": { "type": "string" },
-              "url": { "type": "string", "format": "uri" }
+              "url": { "type": "string", "format": "uri" },
+              "reliability": { "type": "string", "enum": ["High", "Medium", "Mixed"] }
             }
-          },
-          "description": "Authoritative sources used to verify the claim."
+          }
         },
-        "checkedAt": {
-          "type": "string",
-          "description": "The timestamp indicating when the factual verification was performed.",
-          "format": "date-time"
-        }
+        "checkedAt": { "type": "string", "format": "date-time" }
       },
-      "required": [
-        "id",
-        "originalText",
-        "sourceUrl",
-        "verdict",
-        "checkedAt"
-      ]
+      "required": ["id", "originalText", "verdict", "checkedAt"]
     }
   },
   "auth": {
-    "providers": [
-      "password",
-      "anonymous"
-    ]
+    "providers": ["password", "anonymous"]
   },
   "firestore": {
     "structure": [
@@ -70,39 +39,18 @@
         "path": "/users/{userId}",
         "definition": {
           "entityName": "User",
-          "schema": {
-            "$ref": "#/backend/entities/User"
-          },
-          "description": "Represents a user's profile or serves as the root for user-owned subcollections.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user."
-            }
-          ]
+          "schema": { "$ref": "#/backend/entities/User" },
+          "description": "User profile root."
         }
       },
       {
         "path": "/users/{userId}/verificationResults/{verificationResultId}",
         "definition": {
           "entityName": "VerificationResult",
-          "schema": {
-            "$ref": "#/backend/entities/VerificationResult"
-          },
-          "description": "Stores individual factual accuracy verification results, specific to a user.",
-          "params": [
-            {
-              "name": "userId",
-              "description": "The unique identifier of the user who performed the verification."
-            },
-            {
-              "name": "verificationResultId",
-              "description": "The unique identifier for a specific verification result document."
-            }
-          ]
+          "schema": { "$ref": "#/backend/entities/VerificationResult" },
+          "description": "Individual factual verification results."
         }
       }
-    ],
-    "reasoning": "Standard hierarchical user-owned data structure for secure history access."
+    ]
   }
 }
