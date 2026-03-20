@@ -1,0 +1,11 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "morning-mist",
+      "description": "A high-contrast dark forest shrouded in heavy white mist.",
+      "imageUrl": "https://picsum.photos/seed/dark-misty-forest/1920/1080",
+      "imageHint": "dark forest mist"
+    }
+  ]
+}
