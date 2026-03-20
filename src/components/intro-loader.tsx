@@ -18,7 +18,7 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
       size: `${Math.random() * 4 + 2}px`,
       duration: `${Math.random() * 5 + 5}s`,
       delay: `${Math.random() * -10}s`,
-      opacity: Math.random() * 0.5 + 0.1
+      opacity: Math.random() * 0.3 + 0.1
     }));
     setSpores(newSpores);
 
@@ -53,18 +53,18 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
   if (shouldHide) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-[#050406] flex flex-col items-center justify-center overflow-hidden">
+    <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden">
       {/* Background Mist Layers */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-[80%] h-[80%] rounded-full bg-primary/5 blur-[120px] pulse-biolume" />
-        <div className="absolute bottom-1/4 right-1/4 w-[60%] h-[60%] rounded-full bg-accent/5 blur-[100px] pulse-biolume" style={{ animationDelay: '-2s' }} />
+        <div className="absolute bottom-1/4 right-1/4 w-[60%] h-[60%] rounded-full bg-slate-200/40 blur-[100px] pulse-biolume" style={{ animationDelay: '-2s' }} />
       </div>
 
       {/* Snowfall Layer */}
       {spores.map((spore) => (
         <div
           key={spore.id}
-          className="absolute top-[-10px] bg-white rounded-full snow-drift pointer-events-none"
+          className="absolute top-[-10px] bg-slate-300 rounded-full snow-drift pointer-events-none"
           style={{
             left: spore.left,
             width: spore.size,
@@ -93,34 +93,34 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
       >
         <div className="flex flex-col items-center gap-8">
           <div className="relative">
-            <div className="absolute inset-0 bg-primary/20 blur-3xl rounded-full animate-pulse" />
+            <div className="absolute inset-0 bg-primary/10 blur-3xl rounded-full animate-pulse" />
             <ShieldCheck className="h-20 w-20 text-primary relative z-10" />
           </div>
           
           <div className="text-center space-y-4">
-            <h2 className="text-4xl font-black font-headline tracking-tighter text-white">
+            <h2 className="text-4xl font-black font-headline tracking-tighter text-slate-900">
               FACTCHECK <span className="text-primary italic">AI</span>
             </h2>
             <div className="flex items-center gap-3">
-              <div className="h-[1px] w-12 bg-white/10" />
-              <p className="text-[10px] font-black tracking-[0.4em] text-slate-500 uppercase">
+              <div className="h-[1px] w-12 bg-slate-100" />
+              <p className="text-[10px] font-black tracking-[0.4em] text-slate-400 uppercase">
                 Audit in Progress
               </p>
-              <div className="h-[1px] w-12 bg-white/10" />
+              <div className="h-[1px] w-12 bg-slate-100" />
             </div>
           </div>
         </div>
 
         <div className="w-64 space-y-3">
-          <div className="flex justify-between items-end text-white/40">
+          <div className="flex justify-between items-end text-slate-400">
             <span className="text-[9px] font-bold uppercase tracking-widest">Confidence</span>
-            <span className="text-2xl font-black font-mono tracking-tighter text-white">
+            <span className="text-2xl font-black font-mono tracking-tighter text-slate-900">
               {Math.round(progress)}%
             </span>
           </div>
-          <div className="h-[2px] w-full bg-white/5 relative overflow-hidden rounded-full">
+          <div className="h-[2px] w-full bg-slate-100 relative overflow-hidden rounded-full">
             <div 
-              className="absolute top-0 left-0 h-full bg-primary shadow-[0_0_8px_rgba(var(--primary),0.8)] transition-all duration-150 ease-out"
+              className="absolute top-0 left-0 h-full bg-primary shadow-sm transition-all duration-150 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>

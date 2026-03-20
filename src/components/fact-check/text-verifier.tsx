@@ -83,36 +83,36 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-12">
-      <Card className="misty-glass border-white/5 shadow-2xl overflow-hidden group">
+      <Card className="misty-glass border-slate-200/60 shadow-xl overflow-hidden group">
         <CardContent className="p-0">
           <div className="flex flex-col">
             <div className="p-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Forensic Input</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Forensic Input</span>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-white/40 uppercase tracking-widest">
+                <div className="px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
                   Atmospheric Scan
                 </div>
               </div>
 
               {selectedImage ? (
                 <div className="relative w-fit mx-auto group">
-                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-white/10 shadow-2xl" />
-                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-black rounded-full p-2 shadow-xl hover:scale-110 transition-all"><X className="h-4 w-4" /></button>
+                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-slate-100 shadow-lg" />
+                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-slate-900 rounded-full p-2 shadow-xl hover:scale-110 transition-all border"><X className="h-4 w-4" /></button>
                 </div>
               ) : (
                 <Textarea
                   placeholder="Insert claim to clarify through the mist..."
-                  className="min-h-[180px] text-2xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-white/10 text-white font-headline font-bold leading-tight"
+                  className="min-h-[180px] text-2xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-200 text-slate-900 font-headline font-bold leading-tight"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
               )}
             </div>
             
-            <div className="bg-white/5 border-t border-white/5 p-6 flex items-center justify-between">
+            <div className="bg-slate-50/50 border-t border-slate-100 p-6 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -123,13 +123,13 @@ export function TextVerifier() {
                   }
                 }} />
                 {!selectedImage && (
-                  <Button variant="ghost" className="rounded-full gap-3 text-xs font-bold text-white/60 hover:text-primary hover:bg-white/5 border border-white/10 px-6 h-12" onClick={() => fileInputRef.current?.click()}>
+                  <Button variant="ghost" className="rounded-full gap-3 text-xs font-bold text-slate-500 hover:text-primary hover:bg-white border border-slate-200 px-6 h-12" onClick={() => fileInputRef.current?.click()}>
                     <ImageIcon className="h-4 w-4" /> Optical Scan
                   </Button>
                 )}
                 <div className="hidden lg:flex items-center gap-4">
                   {SAMPLES.map((s, i) => (
-                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-white/20 hover:text-primary transition-colors uppercase tracking-widest whitespace-nowrap">"{s.slice(0, 15)}..."</button>
+                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-300 hover:text-primary transition-colors uppercase tracking-widest whitespace-nowrap">"{s.slice(0, 15)}..."</button>
                   ))}
                 </div>
               </div>
@@ -137,7 +137,7 @@ export function TextVerifier() {
               <Button 
                 onClick={handleVerify} 
                 disabled={isVerifying || (!inputText.trim() && !selectedImage)}
-                className="bg-primary hover:bg-primary/90 text-black rounded-full px-10 h-12 font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(180,160,200,0.3)] transition-all hover:scale-105 active:scale-95"
+                className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-12 font-black uppercase tracking-widest text-[10px] shadow-md transition-all hover:scale-105 active:scale-95"
               >
                 {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Clarifying...</> : <><ShieldCheck className="h-4 w-4 mr-2" /> Audit Claim</>}
               </Button>
@@ -154,37 +154,37 @@ export function TextVerifier() {
               context={result.suggestedCorrectionOrContext}
               reasoning={result.reasoning}
               sources={result.sources}
-              className="h-full misty-glass"
+              className="h-full misty-glass border-slate-200/60"
             />
           </div>
           
-          <Card className="misty-glass flex flex-col items-center justify-center p-10 text-center space-y-8 relative overflow-hidden group">
+          <Card className="misty-glass border-slate-200/60 flex flex-col items-center justify-center p-10 text-center space-y-8 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
               <Zap className="h-24 w-24 text-primary" />
             </div>
             
-            <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Atmospheric Clarity</h4>
+            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Atmospheric Clarity</h4>
             
             <div className="relative">
-              <div className="absolute inset-0 blur-3xl bg-primary/20 rounded-full animate-pulse" />
+              <div className="absolute inset-0 blur-3xl bg-primary/10 rounded-full animate-pulse" />
               <svg className="w-48 h-48 transform -rotate-90 relative">
-                <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-white/5" />
+                <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-100" />
                 <circle
                   cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="8" fill="transparent"
                   strokeDasharray={527.7}
                   strokeDashoffset={527.7 - (527.7 * (result.verdict === 'Likely Accurate' ? 95 : result.verdict === 'Potentially Misleading' ? 15 : 45)) / 100}
-                  className={cn("transition-all duration-1000 ease-out", result.verdict === 'Likely Accurate' ? "text-primary" : "text-accent")}
+                  className={cn("transition-all duration-1000 ease-out", result.verdict === 'Likely Accurate' ? "text-primary" : "text-rose-500")}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl font-black text-white tracking-tighter">
+                <span className="text-5xl font-black text-slate-900 tracking-tighter">
                   {result.verdict === 'Likely Accurate' ? '95' : result.verdict === 'Potentially Misleading' ? '15' : '45'}%
                 </span>
-                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Reliability</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Reliability</span>
               </div>
             </div>
             
-            <Button variant="outline" className="w-full rounded-full border-white/10 text-white/60 font-bold text-[10px] uppercase tracking-widest h-12 hover:bg-white/5" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
+            <Button variant="outline" className="w-full rounded-full border-slate-200 text-slate-500 font-bold text-[10px] uppercase tracking-widest h-12 hover:bg-slate-50" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
               <RefreshCw className="h-4 w-4 mr-2" /> New Audit
             </Button>
           </Card>

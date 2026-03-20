@@ -24,18 +24,18 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased selection:bg-primary/20 bg-[#050406]">
-        {/* Fixed Misty Forest Backdrop */}
+      <body className="font-body antialiased selection:bg-primary/20 bg-white">
+        {/* Fixed Morning Mist Backdrop */}
         <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
           <Image 
-            src="https://picsum.photos/seed/forest-truth/1920/1080"
-            alt="Misty Forest Background"
+            src="https://picsum.photos/seed/morning-forest/1920/1080"
+            alt="Misty Morning Forest Background"
             fill
-            className="object-cover opacity-20 grayscale brightness-50"
-            data-ai-hint="misty forest"
+            className="object-cover opacity-30 grayscale contrast-125"
+            data-ai-hint="misty morning"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050406]/60 to-[#050406]" />
-          <div className="absolute inset-0 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/40 to-white" />
+          <div className="absolute inset-0 backdrop-blur-[1px]" />
         </div>
 
         <FirebaseClientProvider>
