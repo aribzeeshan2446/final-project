@@ -44,7 +44,12 @@
   }
 
   .premium-header {
-    @apply bg-white/95 backdrop-blur-md border-b border-primary/10 shadow-sm sticky top-0 z-50;
+    @apply bg-white/70 backdrop-blur-xl border-b-2 border-primary/10 shadow-sm sticky top-0 z-50;
+    /* Adding a subtle decorative top border for interest */
+    &::before {
+      content: '';
+      @apply absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/40 to-transparent;
+    }
   }
 
   .snow-drift {
