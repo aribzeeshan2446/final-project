@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -59,7 +60,7 @@ export function TextVerifier() {
     const reader = new FileReader();
     reader.onload = (event) => {
       setSelectedImage(event.target?.result as string);
-      setInputText(""); // Clear text if image is selected
+      setInputText("");
     };
     reader.readAsDataURL(file);
   };

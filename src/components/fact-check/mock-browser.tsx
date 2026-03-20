@@ -14,6 +14,8 @@ export function MockBrowser() {
   const [result, setResult] = useState<{
     verdict: 'Likely Accurate' | 'Needs Verification' | 'Potentially Misleading';
     suggestedCorrectionOrContext: string | null;
+    reasoning: string;
+    sources: { title: string; url: string }[];
   } | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -21,7 +23,6 @@ export function MockBrowser() {
   const { toast } = useToast();
 
   const handleTextSelection = () => {
-    // Small delay to ensure selection is stable
     setTimeout(() => {
       const selection = window.getSelection();
       const text = selection?.toString().trim();
@@ -39,7 +40,6 @@ export function MockBrowser() {
           setShowTooltip(true);
         }
       } else {
-        // Only hide if we aren't currently verifying or showing a result
         if (!isVerifying && !result) {
           setShowTooltip(false);
         }
@@ -60,7 +60,6 @@ export function MockBrowser() {
     try {
       const output = await verifySelectedTextAccuracy({ selectedText });
       setResult(output);
-      // Clear browser selection after successful capture
       window.getSelection()?.removeAllRanges();
     } catch (error) {
       console.error("Verification failed", error);
@@ -141,12 +140,12 @@ export function MockBrowser() {
               top: tooltipPos.y, 
               transform: 'translate(-50%, -100%)' 
             }}
-            onMouseUp={(e) => e.stopPropagation()} // Prevent parent container from seeing this click
+            onMouseUp={(e) => e.stopPropagation()}
           >
             <Button 
               size="sm" 
               className="bg-primary hover:bg-primary/90 text-white rounded-full shadow-lg gap-2 px-4 py-2"
-              onMouseDown={(e) => e.preventDefault()} // CRITICAL: Prevent the button from taking focus and clearing selection
+              onMouseDown={(e) => e.preventDefault()}
               onClick={verifyText}
             >
               <ShieldCheck className="h-4 w-4" />
@@ -172,23 +171,16 @@ export function MockBrowser() {
                   </div>
                 </div>
               ) : result ? (
-                <div className="relative">
-                  <VerdictCard 
-                    verdict={result.verdict} 
-                    context={result.suggestedCorrectionOrContext} 
-                  />
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="absolute top-2 right-2 text-muted-foreground hover:text-foreground"
-                    onClick={() => {
-                      setResult(null);
-                      setSelectedText("");
-                    }}
-                  >
-                    Dismiss
-                  </Button>
-                </div>
+                <VerdictCard 
+                  verdict={result.verdict} 
+                  context={result.suggestedCorrectionOrContext}
+                  reasoning={result.reasoning}
+                  sources={result.sources}
+                  onClose={() => {
+                    setResult(null);
+                    setSelectedText("");
+                  }}
+                />
               ) : null}
             </div>
           </div>
