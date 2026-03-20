@@ -39,21 +39,21 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
         return {
           icon: <CheckCircle2 className="h-6 w-6 text-primary" />,
           bgColor: "bg-primary/5",
-          textColor: "text-primary",
+          textColor: "text-slate-900",
           label: "Likely Accurate"
         };
       case 'Potentially Misleading':
         return {
-          icon: <AlertCircle className="h-6 w-6 text-rose-500" />,
+          icon: <AlertCircle className="h-6 w-6 text-rose-600" />,
           bgColor: "bg-rose-50",
-          textColor: "text-rose-600",
+          textColor: "text-slate-900",
           label: "Potentially Misleading"
         };
       default:
         return {
-          icon: <HelpCircle className="h-6 w-6 text-slate-400" />,
-          bgColor: "bg-slate-50",
-          textColor: "text-slate-600",
+          icon: <HelpCircle className="h-6 w-6 text-amber-600" />,
+          bgColor: "bg-amber-50",
+          textColor: "text-slate-900",
           label: "Needs Verification"
         };
     }
@@ -87,22 +87,22 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
   };
 
   return (
-    <Card className={cn("overflow-hidden misty-glass border-slate-200/60", className)}>
-      <CardHeader className={cn("py-4 px-8 flex flex-row items-center justify-between", styles.bgColor)}>
+    <Card className={cn("overflow-hidden misty-glass border-slate-300", className)}>
+      <CardHeader className={cn("py-4 px-8 flex flex-row items-center justify-between border-b border-slate-200", styles.bgColor)}>
         <div className="flex items-center gap-3">
           {styles.icon}
-          <CardTitle className={cn("text-lg font-bold tracking-tight", styles.textColor)}>
+          <CardTitle className={cn("text-lg font-black tracking-tight uppercase", styles.textColor)}>
             {styles.label}
           </CardTitle>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-500" onClick={handleAudio} disabled={isGeneratingAudio}>
+          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:bg-white/50" onClick={handleAudio} disabled={isGeneratingAudio}>
             {isGeneratingAudio ? <Loader2 className="h-3 w-3 animate-spin" /> : isPlaying ? 'Pause' : 'Listen'}
           </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={handleCopy}>
-            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-400" />}
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-white/50" onClick={handleCopy}>
+            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-900" />}
           </Button>
-          {onClose && <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={onClose}><X className="h-5 w-5 text-slate-400" /></Button>}
+          {onClose && <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-white/50" onClick={onClose}><X className="h-5 w-5 text-slate-900" /></Button>}
         </div>
       </CardHeader>
       
@@ -110,28 +110,28 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
 
       <CardContent className="p-8 space-y-8">
         <div className="space-y-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Analysis Summary</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Analysis Summary</p>
           <p className="text-xl leading-snug font-bold text-slate-900">{context || "This claim aligns with verified factual records."}</p>
         </div>
 
         {reasoning && (
-          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
             <p className="text-[9px] font-black uppercase tracking-widest text-primary">Detailed Analysis</p>
-            <p className="text-sm text-slate-600 leading-relaxed font-medium italic">{reasoning}</p>
+            <p className="text-sm text-slate-900 leading-relaxed font-bold italic">{reasoning}</p>
           </div>
         )}
 
         {sources && sources.length > 0 && (
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Sources & Evidence</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Sources & Evidence</p>
             <div className="grid gap-3">
               {sources.map((s, i) => (
-                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-white hover:bg-slate-50 transition-colors">
+                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors shadow-sm">
                   <div className="flex items-center gap-3 min-w-0">
                     <ExternalLink className="h-3 w-3 text-primary" />
-                    <span className="text-[11px] font-bold text-slate-700 truncate">{s.title}</span>
+                    <span className="text-[11px] font-bold text-slate-900 truncate">{s.title}</span>
                   </div>
-                  <Badge variant="outline" className="text-[8px] font-bold h-5 px-2">
+                  <Badge variant="outline" className="text-[8px] font-black h-5 px-2 border-slate-300 text-slate-900">
                     {s.reliability || 'Source'}
                   </Badge>
                 </a>

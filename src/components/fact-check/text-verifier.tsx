@@ -83,21 +83,21 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-12">
-      <Card className="misty-glass border-slate-200/60 shadow-xl overflow-hidden">
+      <Card className="misty-glass border-slate-300 shadow-2xl overflow-hidden">
         <CardContent className="p-0">
           <div className="flex flex-col">
             <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between border-b pb-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Input Claim</span>
-                <span className="px-3 py-1 rounded-full bg-slate-50 border text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+              <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Input Claim</span>
+                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[9px] font-bold text-slate-600 uppercase tracking-widest">
                   AI Ready
                 </span>
               </div>
 
               {selectedImage ? (
                 <div className="relative w-fit mx-auto group">
-                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-slate-100 shadow-lg" />
-                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-slate-900 rounded-full p-2 shadow-xl hover:scale-110 border"><X className="h-4 w-4" /></button>
+                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-slate-200 shadow-lg" />
+                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-slate-900 rounded-full p-2 shadow-xl hover:scale-110 border border-slate-200"><X className="h-4 w-4" /></button>
                 </div>
               ) : (
                 <Textarea
@@ -109,7 +109,7 @@ export function TextVerifier() {
               )}
             </div>
             
-            <div className="bg-slate-50/50 border-t border-slate-100 p-6 flex items-center justify-between">
+            <div className="bg-slate-50 border-t border-slate-200 p-6 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
                   const file = e.target.files?.[0];
@@ -120,13 +120,13 @@ export function TextVerifier() {
                   }
                 }} />
                 {!selectedImage && (
-                  <Button variant="outline" className="rounded-full gap-2 text-xs font-bold text-slate-600 bg-white" onClick={() => fileInputRef.current?.click()}>
+                  <Button variant="outline" className="rounded-full gap-2 text-xs font-bold text-slate-900 bg-white border-slate-300 hover:bg-slate-100" onClick={() => fileInputRef.current?.click()}>
                     <ImageIcon className="h-4 w-4" /> Upload Image
                   </Button>
                 )}
                 <div className="hidden lg:flex items-center gap-3">
                   {SAMPLES.map((s, i) => (
-                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-bold text-slate-400 hover:text-primary transition-colors">Try Sample {i+1}</button>
+                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">Sample {i+1}</button>
                   ))}
                 </div>
               </div>
@@ -151,12 +151,12 @@ export function TextVerifier() {
               context={result.suggestedCorrectionOrContext}
               reasoning={result.reasoning}
               sources={result.sources}
-              className="h-full misty-glass border-slate-200/60"
+              className="h-full misty-glass border-slate-300"
             />
           </div>
           
-          <Card className="misty-glass border-slate-200/60 flex flex-col items-center justify-center p-10 text-center space-y-8">
-            <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Accuracy Score</h4>
+          <Card className="misty-glass border-slate-300 flex flex-col items-center justify-center p-10 text-center space-y-8">
+            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Accuracy Score</h4>
             
             <div className="relative">
               <svg className="w-40 h-40 transform -rotate-90 relative">
@@ -165,18 +165,18 @@ export function TextVerifier() {
                   cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="8" fill="transparent"
                   strokeDasharray={452}
                   strokeDashoffset={452 - (452 * (result.verdict === 'Likely Accurate' ? 95 : result.verdict === 'Potentially Misleading' ? 15 : 45)) / 100}
-                  className={cn("transition-all duration-1000", result.verdict === 'Likely Accurate' ? "text-primary" : "text-rose-500")}
+                  className={cn("transition-all duration-1000", result.verdict === 'Likely Accurate' ? "text-primary" : "text-rose-600")}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="text-4xl font-black text-slate-900">
                   {result.verdict === 'Likely Accurate' ? '95' : result.verdict === 'Potentially Misleading' ? '15' : '45'}%
                 </span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Reliability</span>
+                <span className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mt-1">Reliability</span>
               </div>
             </div>
             
-            <Button variant="outline" className="w-full rounded-full font-bold h-12" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
+            <Button variant="outline" className="w-full rounded-full font-bold h-12 border-slate-300 text-slate-900" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
               <RefreshCw className="h-4 w-4 mr-2" /> New Check
             </Button>
           </Card>

@@ -4,9 +4,9 @@
 
 @layer base {
   :root {
-    /* Forest Clarity Palette */
+    /* Forest Clarity Palette - High Contrast */
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --foreground: 222 47% 11%; /* Deep Slate Black */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
@@ -16,8 +16,8 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47% 11.2%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 160 51% 95%; /* Soft Mint Accent */
+    --muted-foreground: 215.4 16.3% 25%; /* Darker muted text for readability */
+    --accent: 160 51% 95%; 
     --accent-foreground: 162 94% 11%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -40,7 +40,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/80 backdrop-blur-xl border border-slate-200/50 shadow-xl;
+    @apply bg-white/90 backdrop-blur-xl border border-slate-200/60 shadow-xl;
   }
 
   .snow-drift {
