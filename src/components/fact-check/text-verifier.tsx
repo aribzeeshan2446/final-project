@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -11,6 +10,7 @@ import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
 import { useFirebase, useUser, initiateAnonymousSignIn, setDocumentNonBlocking } from "@/firebase";
 import { doc } from "firebase/firestore";
+import { cn } from "@/lib/utils";
 
 const SAMPLES = [
   "The Great Wall of China is the only man-made structure visible from the Moon.",
