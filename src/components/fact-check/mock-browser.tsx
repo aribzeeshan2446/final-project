@@ -7,7 +7,7 @@ import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accu
 import { analyzePageClaims } from "@/ai/flows/analyze-page-claims";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 const ARTICLE_CONTENT = `In today's interconnected world, the speed at which news travels is unprecedented. 
@@ -182,7 +182,7 @@ export function MockBrowser() {
             <div className="w-3 h-3 rounded-full bg-slate-300" />
           </div>
           <div className="flex items-center gap-2 bg-white rounded-lg px-3 py-1.5 flex-1 border border-slate-200 shadow-sm max-w-lg">
-            <Globe className="h-4 w-4 text-slate-400" />
+            <Globe className="h-4 w-4 text-slate-900" />
             <span className="text-xs text-slate-900 truncate font-bold">https://news.example.com/daily-digest</span>
           </div>
           <div className="flex items-center gap-3">
@@ -196,7 +196,7 @@ export function MockBrowser() {
               {isScanning ? <Loader2 className="h-3 w-3 animate-spin" /> : <Zap className="h-3 w-3" />}
               Scan Page
             </Button>
-            <div className="flex items-center gap-2 text-slate-500 border-l border-slate-200 pl-3">
+            <div className="flex items-center gap-2 text-slate-900 border-l border-slate-200 pl-3">
               <RotateCcw className="h-4 w-4 cursor-pointer hover:text-primary transition-colors" />
               <Search className="h-4 w-4 cursor-pointer hover:text-primary transition-colors" />
             </div>
@@ -216,19 +216,19 @@ export function MockBrowser() {
             <div className="flex items-center justify-between text-sm text-slate-900 font-bold border-b border-slate-200 pb-4">
               <div className="flex items-center gap-3">
                 <span className="text-slate-900">By Elena Vance</span>
-                <span className="text-slate-300">•</span>
-                <span>October 24, 2023</span>
+                <span className="text-slate-900">•</span>
+                <span className="text-slate-900">October 24, 2023</span>
               </div>
               <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-[9px] font-black">
                 <Info className="h-3 w-3 text-primary" />
-                <span>SELECT TEXT TO VERIFY</span>
+                <span className="text-slate-900">SELECT TEXT TO VERIFY</span>
               </div>
             </div>
             
             <div className="prose prose-slate max-w-none text-lg text-slate-900 font-bold leading-relaxed space-y-4">
               {renderHighlightedContent()}
               
-              <p className="italic text-slate-800 text-base pt-4 border-t border-slate-100 font-bold">
+              <p className="italic text-slate-900 text-base pt-4 border-t border-slate-100 font-bold">
                 {scanResult 
                   ? "Page analyzed. Hover over highlighted text to see details." 
                   : "Highlight specific text or click 'Scan Page' to verify everything at once."}
@@ -338,9 +338,9 @@ export function MockBrowser() {
         ) : (
           <div className="bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center space-y-4">
             <div className="bg-white p-3 rounded-full w-fit mx-auto shadow-sm">
-              <Search className="h-5 w-5 text-slate-300" />
+              <Search className="h-5 w-5 text-slate-900" />
             </div>
-            <p className="text-xs font-bold text-slate-400 leading-relaxed uppercase tracking-widest">
+            <p className="text-xs font-bold text-slate-900 leading-relaxed uppercase tracking-widest">
               Ready to verify. Select text or scan the page.
             </p>
           </div>
@@ -350,6 +350,10 @@ export function MockBrowser() {
       {/* VERDICT POPUP (MODAL) */}
       <Dialog open={!!result} onOpenChange={(open) => !open && setResult(null)}>
         <DialogContent className="max-w-2xl p-0 border-none bg-transparent shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Factual Verification Results</DialogTitle>
+            <DialogDescription>Detailed AI analysis of the selected claim with sources and reasoning.</DialogDescription>
+          </DialogHeader>
           {result && (
             <VerdictCard 
               verdict={result.verdict} 
