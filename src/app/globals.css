@@ -4,16 +4,16 @@
 
 @layer base {
   :root {
-    /* Forensic Forest - High Key Palette */
-    /* Background is absolute misty white */
-    /* Primary is the deepest forest ink (almost black) */
+    /* Forensic Forest - High-Key Atmospheric Palette */
+    /* Background is absolute misty white for clinical clarity */
+    /* Primary is the deepest forest ink (almost black) from the pine silhouettes */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 145 63% 5%; /* Deep Forest Ink */
+    --primary: 145 63% 5%; /* Ink Black Forest Silhouette */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47% 11.2%;
@@ -43,7 +43,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/80 backdrop-blur-2xl border border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)];
+    @apply bg-white/85 backdrop-blur-2xl border border-slate-200/50 shadow-[0_25px_60px_rgba(0,0,0,0.06)];
   }
 
   .snow-drift {
@@ -90,6 +90,6 @@
   }
 
   .forest-vignette {
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.03) 100%);
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.02) 100%);
   }
 }

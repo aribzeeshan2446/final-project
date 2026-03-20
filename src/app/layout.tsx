@@ -25,19 +25,18 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased selection:bg-primary/20 bg-white min-h-screen">
-        {/* Fixed High-Contrast Misty Forest Backdrop */}
+        {/* Fixed High-Contrast Forensic Forest Backdrop */}
         <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
           <Image 
-            src="https://picsum.photos/seed/ink-black-pines/1920/1080"
-            alt="Ink Black Pines"
+            src="/forest-bg.png"
+            alt="Forensic Forest Backdrop"
             fill
             priority
-            className="object-cover opacity-20 contrast-150 brightness-110 grayscale"
-            data-ai-hint="ink black pine trees mist"
+            className="object-cover opacity-100 contrast-[1.1] brightness-[1.05]"
           />
-          {/* Misty Atmosphere Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white" />
-          <div className="absolute inset-0 backdrop-blur-[2px]" />
+          {/* Atmospheric Overlays for Clarity */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/60" />
+          <div className="absolute inset-0 backdrop-blur-[1px]" />
           <div className="absolute inset-0 forest-vignette" />
         </div>
 
