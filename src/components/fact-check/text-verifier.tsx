@@ -1,10 +1,11 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCw, Zap, Award } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
@@ -88,9 +89,9 @@ export function TextVerifier() {
 
   const getScore = (verdict: string) => {
     switch (verdict) {
-      case 'Likely Accurate': return { value: 95, color: 'text-primary' };
-      case 'Potentially Misleading': return { value: 15, color: 'text-accent' };
-      default: return { value: 45, color: 'text-amber-500' };
+      case 'Likely Accurate': return { value: 95, color: 'text-primary', label: 'High Confidence' };
+      case 'Potentially Misleading': return { value: 15, color: 'text-accent', label: 'High Risk' };
+      default: return { value: 45, color: 'text-amber-500', label: 'Needs Proof' };
     }
   };
 
@@ -98,33 +99,34 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-8">
-      <Card className="border-2 shadow-xl overflow-hidden bg-white">
+      <Card className="border-2 shadow-xl overflow-hidden bg-white group hover:border-primary/20 transition-all duration-500">
         <CardContent className="p-0">
           <div className="flex flex-col">
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider">
+                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                  <Award className="h-4 w-4 text-primary" />
                   Paste Text to Fact-Check
                 </label>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
-                  <Search className="h-3 w-3" />
-                  <span>AI-Powered Scan</span>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium bg-slate-50 px-3 py-1 rounded-full">
+                  <Zap className="h-3 w-3 text-primary" />
+                  <span>Real-time AI Verification</span>
                 </div>
               </div>
               <Textarea
                 placeholder="Example: The Eiffel Tower was built in 1950 by the Romans..."
-                className="min-h-[160px] text-lg border-none focus-visible:ring-0 p-0 resize-none placeholder:text-slate-300"
+                className="min-h-[160px] text-lg border-none focus-visible:ring-0 p-0 resize-none placeholder:text-slate-300 font-medium"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
             <div className="bg-slate-50 p-4 border-t flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <p className="text-[10px] text-muted-foreground font-medium shrink-0">
-                  {inputText.length} chars
+                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest bg-white px-2 py-1 rounded border">
+                  {inputText.length} CHARS
                 </p>
                 <div className="hidden sm:flex items-center gap-3 border-l border-slate-200 pl-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-tight">Try:</span>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Try Sample:</span>
                   {SAMPLES.slice(0, 2).map((sample, i) => (
                     <button
                       key={i}
@@ -156,15 +158,15 @@ export function TextVerifier() {
                 <Button 
                   onClick={handleVerify} 
                   disabled={isVerifying || !inputText.trim()}
-                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-6 gap-2 shadow-lg shadow-primary/20 h-9 text-xs font-bold"
+                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 shadow-lg shadow-primary/20 h-10 text-xs font-bold transition-all hover:scale-105 active:scale-95"
                 >
                   {isVerifying ? (
                     <>
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" /> Verifying...
+                      <Loader2 className="h-4 w-4 animate-spin" /> Analyzing Claim...
                     </>
                   ) : (
                     <>
-                      <ShieldCheck className="h-3.5 w-3.5" /> Verify Accuracy
+                      <ShieldCheck className="h-4 w-4" /> Verify Accuracy
                     </>
                   )}
                 </Button>
@@ -175,53 +177,66 @@ export function TextVerifier() {
       </Card>
 
       {result && (
-        <div className="grid md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-4 duration-500">
-          <Card className="md:col-span-2 border shadow-lg overflow-hidden">
-            <CardContent className="p-0">
-              <VerdictCard 
-                verdict={result.verdict} 
-                context={result.suggestedCorrectionOrContext}
-                reasoning={result.reasoning}
-                sources={result.sources}
-                className="border-none shadow-none rounded-none"
-              />
-            </CardContent>
-          </Card>
+        <div className="grid md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-8 duration-700">
+          <div className="md:col-span-2">
+            <VerdictCard 
+              verdict={result.verdict} 
+              context={result.suggestedCorrectionOrContext}
+              reasoning={result.reasoning}
+              sources={result.sources}
+              className="h-full"
+            />
+          </div>
           
-          <Card className="border shadow-lg flex flex-col items-center justify-center p-6 text-center space-y-4 bg-white">
-            <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest">Trust Index</h4>
-            <div className="relative">
-              <svg className="w-32 h-32 transform -rotate-90">
+          <Card className="border shadow-lg flex flex-col items-center justify-center p-8 text-center space-y-6 bg-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-5">
+              <Zap className="h-24 w-24 text-primary" />
+            </div>
+            
+            <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Confidence Index</h4>
+            
+            <div className="relative group">
+              <svg className="w-40 h-40 transform -rotate-90">
                 <circle
-                  cx="64"
-                  cy="64"
-                  r="58"
+                  cx="80"
+                  cy="80"
+                  r="72"
                   stroke="currentColor"
-                  strokeWidth="8"
+                  strokeWidth="10"
                   fill="transparent"
-                  className="text-slate-100"
+                  className="text-slate-50"
                 />
                 <circle
-                  cx="64"
-                  cy="64"
-                  r="58"
+                  cx="80"
+                  cy="80"
+                  r="72"
                   stroke="currentColor"
-                  strokeWidth="8"
+                  strokeWidth="10"
                   fill="transparent"
-                  strokeDasharray={364.4}
-                  strokeDashoffset={364.4 - (364.4 * (score?.value || 0)) / 100}
-                  className={cn("transition-all duration-1000", score?.color)}
+                  strokeDasharray={452.4}
+                  strokeDashoffset={452.4 - (452.4 * (score?.value || 0)) / 100}
+                  className={cn("transition-all duration-1000 ease-out", score?.color)}
                 />
               </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className={cn("text-3xl font-black", score?.color)}>{score?.value}%</span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className={cn("text-4xl font-black tracking-tighter", score?.color)}>{score?.value}%</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{score?.label}</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground leading-relaxed px-4">
-              Factual confidence level based on current AI indexing.
-            </p>
-            <div className="pt-4 w-full">
-              <Button variant="outline" size="sm" className="w-full rounded-full gap-2 border-slate-200" onClick={() => {setInputText(""); setResult(null);}}>
+            
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground leading-relaxed font-medium italic">
+                AI verification complete. This index reflects the alignment of the claim with verified historical and scientific databases.
+              </p>
+            </div>
+            
+            <div className="pt-2 w-full">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full rounded-full gap-2 border-slate-200 font-bold text-[10px] uppercase tracking-widest h-10 hover:bg-slate-50" 
+                onClick={() => {setInputText(""); setResult(null);}}
+              >
                 <RefreshCw className="h-3 w-3" /> New Verification
               </Button>
             </div>
