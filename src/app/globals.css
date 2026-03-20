@@ -4,28 +4,28 @@
 
 @layer base {
   :root {
-    /* Forensic Forest Palette - High Contrast Mist */
-    /* Background is a crisp misty white with lavender undertones */
-    /* Primary is a deep, heavy forest ink (almost black) */
-    --background: 240 10% 99%;
+    /* Forensic Forest - High Key Palette */
+    /* Background is absolute misty white */
+    /* Primary is the deepest forest ink (almost black) */
+    --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 145 63% 10%; /* Ink-Black Forest Green */
+    --primary: 145 63% 5%; /* Deep Forest Ink */
     --primary-foreground: 0 0% 100%;
-    --secondary: 255 15% 95%; /* Misty Lavender */
+    --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 255 15% 95%;
+    --accent: 210 40% 96.1%;
     --accent-foreground: 222 47% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 145 63% 10%;
+    --ring: 145 63% 5%;
     --radius: 1.5rem;
   }
 }
@@ -43,7 +43,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/70 backdrop-blur-2xl border border-white/40 shadow-[0_20px_60px_rgba(0,0,0,0.05)];
+    @apply bg-white/80 backdrop-blur-2xl border border-slate-200 shadow-[0_20px_50px_rgba(0,0,0,0.05)];
   }
 
   .snow-drift {
@@ -90,6 +90,6 @@
   }
 
   .forest-vignette {
-    background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.08) 100%);
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.03) 100%);
   }
 }

@@ -11,18 +11,18 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
   const [snowflakes, setSnowflakes] = useState<Array<{ id: number; left: string; size: string; duration: string; delay: string; opacity: number }>>([]);
 
   useEffect(() => {
-    // Generate crisp forest snow particles
-    const newSnow = [...Array(60)].map((_, i) => ({
+    // Generate crisp black forensic spores
+    const newSnow = [...Array(40)].map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      size: `${Math.random() * 4 + 1}px`,
+      size: `${Math.random() * 3 + 1}px`,
       duration: `${Math.random() * 6 + 3}s`,
       delay: `${Math.random() * -10}s`,
-      opacity: Math.random() * 0.7 + 0.3
+      opacity: Math.random() * 0.4 + 0.1
     }));
     setSnowflakes(newSnow);
 
-    const duration = 3500;
+    const duration = 2500;
     const interval = 20;
     const steps = duration / interval;
     const increment = 100 / steps;
@@ -46,7 +46,7 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
         setIsExiting(true);
         onComplete();
         setTimeout(() => setShouldHide(true), 2500);
-      }, 1000);
+      }, 500);
     }
   }, [progress, onComplete]);
 
@@ -54,17 +54,17 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden">
-      {/* Misty Atmospheric Layers (Pink/Lavender Twilight) */}
+      {/* High-Key Misty Atmosphere */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 right-0 w-[100%] h-[100%] rounded-full bg-pink-100/40 blur-[180px] pulse-biolume" />
-        <div className="absolute bottom-1/4 left-0 w-[80%] h-[80%] rounded-full bg-slate-200/50 blur-[150px] pulse-biolume" style={{ animationDelay: '-4s' }} />
+        <div className="absolute top-1/4 right-0 w-[100%] h-[100%] rounded-full bg-slate-100/50 blur-[180px] pulse-biolume" />
+        <div className="absolute bottom-1/4 left-0 w-[80%] h-[80%] rounded-full bg-slate-200/40 blur-[150px] pulse-biolume" style={{ animationDelay: '-4s' }} />
       </div>
 
-      {/* Crisp Snowfall Layer */}
+      {/* Forensic Spores (Black Snow) */}
       {snowflakes.map((flake) => (
         <div
           key={flake.id}
-          className="absolute top-[-20px] bg-white rounded-full snow-drift pointer-events-none shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+          className="absolute top-[-20px] bg-primary rounded-full snow-drift pointer-events-none"
           style={{
             left: flake.left,
             width: flake.size,
@@ -79,49 +79,49 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
       {/* Exit Mist Overlay */}
       <div 
         className={cn(
-          "absolute inset-0 bg-white/60 backdrop-blur-[60px] transition-opacity duration-2000 pointer-events-none z-50",
+          "absolute inset-0 bg-white/40 backdrop-blur-[40px] transition-opacity duration-2000 pointer-events-none z-50",
           isExiting ? "reveal-mist" : "opacity-0"
         )} 
       />
 
       <div 
         className={cn(
-          "relative z-10 space-y-20 transition-all duration-1500 ease-[cubic-bezier(0.85,0,0.15,1)]",
-          isExiting ? "opacity-0 scale-[1.3] blur-[100px] translate-y-[-40px]" : "opacity-100"
+          "relative z-10 space-y-16 transition-all duration-1500 ease-[cubic-bezier(0.85,0,0.15,1)]",
+          isExiting ? "opacity-0 scale-[1.1] blur-[40px] translate-y-[-20px]" : "opacity-100"
         )}
       >
-        <div className="flex flex-col items-center gap-12">
+        <div className="flex flex-col items-center gap-10">
           <div className="relative">
-            <div className="absolute inset-0 bg-slate-900/5 blur-[80px] rounded-full animate-pulse" />
+            <div className="absolute inset-0 bg-primary/5 blur-[60px] rounded-full animate-pulse" />
             <div className="bg-primary p-4 rounded-3xl shadow-2xl relative z-10">
-              <ShieldCheck className="h-20 w-20 text-white" />
+              <ShieldCheck className="h-16 w-16 text-white" />
             </div>
           </div>
           
-          <div className="text-center space-y-6">
-            <h2 className="text-6xl font-black font-headline tracking-tighter text-slate-900">
-              FACTCHECK <span className="text-primary italic">AI</span>
+          <div className="text-center space-y-4">
+            <h2 className="text-5xl font-black font-headline tracking-tighter text-slate-900 uppercase">
+              FactCheck <span className="text-primary italic">AI</span>
             </h2>
             <div className="flex items-center justify-center gap-4">
-              <div className="h-[2px] w-20 bg-slate-100" />
-              <p className="text-[10px] font-black tracking-[0.8em] text-slate-300 uppercase">
-                Atmospheric Audit
+              <div className="h-[1px] w-12 bg-slate-200" />
+              <p className="text-[9px] font-black tracking-[0.6em] text-slate-300 uppercase">
+                Atmospheric Scan
               </p>
-              <div className="h-[2px] w-20 bg-slate-100" />
+              <div className="h-[1px] w-12 bg-slate-200" />
             </div>
           </div>
         </div>
 
-        <div className="w-96 space-y-6">
+        <div className="w-80 space-y-6">
           <div className="flex justify-between items-end text-slate-400 px-2">
-            <span className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">Clarifying Mist</span>
-            <span className="text-4xl font-black font-mono tracking-tighter text-slate-900">
+            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-slate-300">Clarifying...</span>
+            <span className="text-3xl font-black font-mono tracking-tighter text-slate-900">
               {Math.round(progress)}%
             </span>
           </div>
-          <div className="h-[4px] w-full bg-slate-100 relative overflow-hidden rounded-full shadow-inner">
+          <div className="h-[3px] w-full bg-slate-100 relative overflow-hidden rounded-full">
             <div 
-              className="absolute top-0 left-0 h-full bg-primary transition-all duration-300 ease-out shadow-[0_0_20px_rgba(0,0,0,0.2)]"
+              className="absolute top-0 left-0 h-full bg-primary transition-all duration-300 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>

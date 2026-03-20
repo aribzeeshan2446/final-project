@@ -18,27 +18,26 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>FactCheck AI - Deep Forest Forensic Audit</title>
-        <meta name="description" content="Instantly verify web content with the FactCheck AI forensic lens." />
+        <title>FactCheck AI - Forensic Atmosphere</title>
+        <meta name="description" content="Clarifying the digital fog with forensic intelligence." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased selection:bg-primary/20 bg-white min-h-screen">
-        {/* Fixed Deep Forensic Forest Backdrop */}
+        {/* Fixed High-Contrast Misty Forest Backdrop */}
         <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
           <Image 
-            src="https://picsum.photos/seed/black-pines/1920/1080"
-            alt="Dark Pine Forest"
+            src="https://picsum.photos/seed/ink-black-pines/1920/1080"
+            alt="Ink Black Pines"
             fill
             priority
-            className="object-cover opacity-80 brightness-75 contrast-150 saturate-[0.2]"
-            data-ai-hint="dark pine forest mist"
+            className="object-cover opacity-20 contrast-150 brightness-110 grayscale"
+            data-ai-hint="ink black pine trees mist"
           />
-          {/* Specific Twilight Mist Overlays based on image */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#F8FAFC] via-transparent to-[#FCE7F3]/30" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#E2E8F0]/20 via-white/40 to-white" />
-          <div className="absolute inset-0 backdrop-blur-[3px]" />
+          {/* Misty Atmosphere Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 via-transparent to-white" />
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
           <div className="absolute inset-0 forest-vignette" />
         </div>
 

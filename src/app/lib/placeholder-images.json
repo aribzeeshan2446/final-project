@@ -1,10 +1,10 @@
 {
   "placeholderImages": [
     {
-      "id": "morning-mist",
-      "description": "High-contrast dark forest silhouettes in heavy pinkish-white mist.",
-      "imageUrl": "https://picsum.photos/seed/black-pines/1920/1080",
-      "imageHint": "dark pine forest mist"
+      "id": "ink-black-pines",
+      "description": "High contrast ink-black pine tree silhouettes against white forest mist.",
+      "imageUrl": "https://picsum.photos/seed/ink-black-pines/1920/1080",
+      "imageHint": "ink black pine trees mist"
     }
   ]
 }
