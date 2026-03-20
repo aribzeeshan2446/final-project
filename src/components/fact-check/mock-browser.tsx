@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { Search, Globe, RotateCcw, ShieldCheck, Zap, Loader2, Info, CheckCircle2, AlertCircle } from "lucide-react";
+import React, { useState, useRef } from "react";
+import { Search, Globe, RotateCcw, ShieldCheck, Zap, Loader2, Info, CheckCircle2, AlertCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { analyzePageClaims } from "@/ai/flows/analyze-page-claims";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 const ARTICLE_CONTENT = `In today's interconnected world, the speed at which news travels is unprecedented. 
@@ -44,7 +45,6 @@ export function MockBrowser() {
   const { toast } = useToast();
 
   const handleTextSelection = () => {
-    // Small timeout to ensure window.getSelection() is populated
     setTimeout(() => {
       const selection = window.getSelection();
       const text = selection?.toString().trim();
@@ -54,17 +54,15 @@ export function MockBrowser() {
         const rect = range.getBoundingClientRect();
         const containerRect = containerRef.current.getBoundingClientRect();
         
-        if (rect) {
-          // Calculate position relative to the container for "absolute" positioning
-          setTooltipPos({
-            x: rect.left - containerRect.left + rect.width / 2,
-            y: rect.top - containerRect.top - 10
-          });
-          setSelectedText(text);
-          setShowTooltip(true);
-        }
+        // Pin tooltip to selection
+        setTooltipPos({
+          x: rect.left - containerRect.left + rect.width / 2,
+          y: rect.top - containerRect.top - 10
+        });
+        setSelectedText(text);
+        setShowTooltip(true);
       } else {
-        if (!isVerifying && !result) {
+        if (!isVerifying) {
           setShowTooltip(false);
         }
       }
@@ -80,14 +78,12 @@ export function MockBrowser() {
     setShowTooltip(false);
     setIsVerifying(true);
     setResult(null);
-    setScanResult(null); 
     
     try {
       const output = await verifySelectedTextAccuracy({ selectedText });
       setResult(output);
       window.getSelection()?.removeAllRanges();
     } catch (error) {
-      console.error("Verification failed", error);
       toast({
         variant: "destructive",
         title: "Verification Error",
@@ -282,22 +278,9 @@ export function MockBrowser() {
         </div>
       </div>
 
-      {/* Sidebar */}
+      {/* Sidebar - Now only for Aggregate Page Info */}
       <div className="w-full md:w-[320px] shrink-0 space-y-6">
-        {result && (
-          <VerdictCard 
-            verdict={result.verdict} 
-            context={result.suggestedCorrectionOrContext}
-            reasoning={result.reasoning}
-            sources={result.sources}
-            onClose={() => {
-              setResult(null);
-              setSelectedText("");
-            }}
-          />
-        )}
-
-        {scanResult && (
+        {scanResult ? (
           <div className="bg-white rounded-2xl border-2 border-slate-200 p-6 shadow-xl space-y-6 animate-in slide-in-from-right-4">
             <div className="flex items-center justify-between">
               <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Page Health</h4>
@@ -352,8 +335,33 @@ export function MockBrowser() {
               Clear Analysis
             </Button>
           </div>
+        ) : (
+          <div className="bg-slate-50/50 rounded-2xl border-2 border-dashed border-slate-200 p-8 text-center space-y-4">
+            <div className="bg-white p-3 rounded-full w-fit mx-auto shadow-sm">
+              <Search className="h-5 w-5 text-slate-300" />
+            </div>
+            <p className="text-xs font-bold text-slate-400 leading-relaxed uppercase tracking-widest">
+              Ready to verify. Select text or scan the page.
+            </p>
+          </div>
         )}
       </div>
+
+      {/* VERDICT POPUP (MODAL) */}
+      <Dialog open={!!result} onOpenChange={(open) => !open && setResult(null)}>
+        <DialogContent className="max-w-2xl p-0 border-none bg-transparent shadow-none">
+          {result && (
+            <VerdictCard 
+              verdict={result.verdict} 
+              context={result.suggestedCorrectionOrContext}
+              reasoning={result.reasoning}
+              sources={result.sources}
+              onClose={() => setResult(null)}
+              className="shadow-2xl"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
