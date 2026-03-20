@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Search, Globe, RotateCcw, ShieldCheck, Zap, Loader2, Info, CheckCircle2, AlertCircle, X } from "lucide-react";
+import { Search, Globe, RotateCcw, ShieldCheck, Loader2, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
-import { analyzePageClaims } from "@/ai/flows/analyze-page-claims";
 import { VerdictCard } from "./verdict-card";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -25,12 +24,6 @@ meteorological agencies and serves as a critical point of discussion for policy 
 export function MockBrowser() {
   const [selectedText, setSelectedText] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isScanning, setIsScanning] = useState(false);
-  const [scanResult, setScanResult] = useState<{
-    claims: Array<{ claimText: string; verdict: string; context: string }>;
-    overallHealth: number;
-  } | null>(null);
-  
   const [result, setResult] = useState<{
     verdict: 'Likely Accurate' | 'Needs Verification' | 'Potentially Misleading';
     suggestedCorrectionOrContext: string | null;
@@ -92,83 +85,6 @@ export function MockBrowser() {
     }
   };
 
-  const handleScanPage = async () => {
-    setIsScanning(true);
-    setResult(null);
-    setShowTooltip(false);
-    
-    try {
-      const output = await analyzePageClaims({ pageText: ARTICLE_CONTENT });
-      setScanResult(output);
-      toast({
-        title: "Scan Complete",
-        description: `Identified ${output.claims.length} claims.`,
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Scan Failed",
-        description: "Could not analyze the page.",
-      });
-    } finally {
-      setIsScanning(false);
-    }
-  };
-
-  const renderHighlightedContent = () => {
-    if (!scanResult) return ARTICLE_CONTENT.split('\n\n').map((p, i) => <p key={i}>{p}</p>);
-
-    let content = ARTICLE_CONTENT;
-    const sortedClaims = [...scanResult.claims].sort((a, b) => b.claimText.length - a.claimText.length);
-    
-    return content.split('\n\n').map((paragraph, pIdx) => {
-      let elements: React.ReactNode[] = [paragraph];
-      
-      sortedClaims.forEach((claim) => {
-        const newElements: React.ReactNode[] = [];
-        elements.forEach((el) => {
-          if (typeof el !== 'string') {
-            newElements.push(el);
-            return;
-          }
-          
-          const parts = el.split(claim.claimText);
-          if (parts.length > 1) {
-            parts.forEach((part, i) => {
-              newElements.push(part);
-              if (i < parts.length - 1) {
-                const colorClass = claim.verdict === 'Accurate' 
-                  ? "bg-emerald-100 text-slate-900 border-b-2 border-emerald-600" 
-                  : claim.verdict === 'Misleading' 
-                  ? "bg-rose-100 text-slate-900 border-b-2 border-rose-600" 
-                  : "bg-amber-100 text-slate-900 border-b-2 border-amber-600";
-                
-                newElements.push(
-                  <span 
-                    key={`${pIdx}-${claim.claimText}-${i}`} 
-                    className={cn("px-0.5 rounded-sm transition-all cursor-help relative group/claim font-black", colorClass)}
-                  >
-                    {claim.claimText}
-                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-4 bg-slate-900 text-white text-[10px] rounded-2xl shadow-2xl z-50">
-                      <span className="font-black uppercase tracking-widest block mb-2 border-b border-white/20 pb-1">
-                        {claim.verdict}
-                      </span>
-                      <span className="font-bold opacity-90">{claim.context}</span>
-                    </span>
-                  </span>
-                );
-              }
-            });
-          } else {
-            newElements.push(el);
-          }
-        });
-        elements = newElements;
-      });
-      return <p key={pIdx}>{elements}</p>;
-    });
-  };
-
   return (
     <div className="w-full max-w-4xl mx-auto">
       <div className="rounded-[3rem] border-8 border-slate-100 overflow-hidden bg-white shadow-2xl relative">
@@ -179,25 +95,13 @@ export function MockBrowser() {
             <div className="w-3.5 h-3.5 rounded-full bg-slate-200" />
             <div className="w-3.5 h-3.5 rounded-full bg-slate-200" />
           </div>
-          <div className="flex items-center gap-3 bg-white rounded-2xl px-5 py-2.5 flex-1 border border-slate-100 shadow-inner max-w-xl">
+          <div className="flex items-center gap-3 bg-white rounded-2xl px-5 py-2.5 flex-1 border border-slate-100 shadow-inner max-w-xl mx-auto">
             <Globe className="h-4 w-4 text-slate-900 opacity-60" />
             <span className="text-[11px] text-slate-900 truncate font-black uppercase tracking-tight">https://news.example.com/daily-digest</span>
           </div>
-          <div className="flex items-center gap-5">
-            <Button 
-              size="sm" 
-              variant="default" 
-              disabled={isScanning}
-              onClick={handleScanPage}
-              className="h-11 rounded-full gap-2.5 text-[10px] font-black uppercase tracking-widest bg-primary hover:bg-primary/95 shadow-lg px-6"
-            >
-              {isScanning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
-              Full Audit
-            </Button>
-            <div className="flex items-center gap-4 text-slate-900 border-l border-slate-200 pl-5">
-              <RotateCcw className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
-              <Search className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
-            </div>
+          <div className="flex items-center gap-5 text-slate-900 border-l border-slate-200 pl-5">
+            <RotateCcw className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
+            <Search className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
           </div>
         </div>
 
@@ -224,12 +128,12 @@ export function MockBrowser() {
             </div>
             
             <div className="prose prose-slate max-w-none text-xl text-slate-900 font-bold leading-relaxed space-y-8">
-              {renderHighlightedContent()}
+              {ARTICLE_CONTENT.split('\n\n').map((p, i) => <p key={i}>{p}</p>)}
             </div>
           </div>
 
           {/* Selection Tooltip */}
-          {showTooltip && !result && (
+          {showTooltip && !result && !isVerifying && (
             <div 
               className="absolute z-50 animate-in fade-in zoom-in duration-300 pointer-events-auto"
               style={{ 
@@ -252,10 +156,35 @@ export function MockBrowser() {
             </div>
           )}
 
-          {/* Integrated Seamless Result Card */}
+          {/* Loading Tooltip */}
+          {isVerifying && (
+            <div 
+              className="absolute z-50 animate-in fade-in zoom-in duration-300 pointer-events-none"
+              style={{ 
+                left: tooltipPos.x, 
+                top: tooltipPos.y, 
+                transform: 'translate(-50%, -100%)' 
+              }}
+            >
+              <div className="bg-slate-900 text-white rounded-full shadow-2xl flex items-center gap-3 px-8 py-4 border-4 border-white">
+                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                <span className="text-[12px] font-black uppercase tracking-widest">Analyzing...</span>
+              </div>
+              <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-slate-900 mx-auto" />
+            </div>
+          )}
+
+          {/* Integrated Seamless Result Card (Floating, No Full Blur) */}
           {result && (
-            <div className="absolute inset-0 z-50 bg-white/60 backdrop-blur-md p-6 flex items-center justify-center animate-in fade-in zoom-in duration-500">
-              <div className="relative w-full max-w-lg">
+            <div 
+              className="absolute z-50 animate-in fade-in slide-in-from-top-4 duration-500 pointer-events-auto"
+              style={{ 
+                left: '50%',
+                top: tooltipPos.y,
+                transform: 'translateX(-50%)'
+              }}
+            >
+              <div className="relative w-[400px]">
                 <VerdictCard 
                   verdict={result.verdict} 
                   context={result.suggestedCorrectionOrContext}
@@ -267,78 +196,8 @@ export function MockBrowser() {
               </div>
             </div>
           )}
-
-          {/* Loading Overlay */}
-          {isVerifying && (
-            <div className="absolute inset-0 bg-white/95 backdrop-blur-xl z-40 flex items-center justify-center p-8">
-              <div className="bg-white p-12 rounded-[3rem] border-4 border-slate-50 shadow-2xl flex flex-col items-center gap-8 text-center max-w-sm">
-                <div className="relative">
-                  <div className="w-20 h-20 border-6 border-primary/10 border-t-primary rounded-full animate-spin" />
-                  <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-black text-2xl uppercase tracking-tight text-slate-900">Auditing</h3>
-                  <p className="text-[11px] text-slate-900 font-black mt-3 uppercase tracking-[0.2em] opacity-40">Scanning Global Indices</p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
-      
-      {/* Bottom Page Analysis */}
-      {scanResult && !result && (
-        <div className="mt-10 animate-in slide-in-from-bottom-8 duration-700">
-          <div className="misty-glass border-slate-200 rounded-[3rem] p-10 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex flex-col items-center gap-4 shrink-0">
-               <div className="relative w-28 h-28">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100" />
-                  <circle 
-                    cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" 
-                    strokeDasharray={301.6} 
-                    strokeDashoffset={301.6 - (301.6 * scanResult.overallHealth) / 100}
-                    className={cn("transition-all duration-1000", scanResult.overallHealth > 70 ? "text-primary" : "text-rose-600")} 
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center text-2xl font-black text-slate-900">
-                  {scanResult.overallHealth}%
-                </div>
-              </div>
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Trust Index</p>
-            </div>
-            
-            <div className="flex-1 space-y-8">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900">Page Audit Breakdown</h4>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-[10px] font-black uppercase text-slate-900 hover:bg-slate-100 px-4 rounded-full"
-                  onClick={() => setScanResult(null)}
-                >
-                  Dismiss
-                </Button>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {scanResult.claims.slice(0, 3).map((claim, i) => (
-                  <div key={i} className="p-4 rounded-2xl bg-white border border-slate-100 space-y-3 shadow-sm hover:shadow-md transition-shadow">
-                    <div className="flex items-center gap-2.5">
-                      {claim.verdict === 'Accurate' ? (
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-rose-600" />
-                      )}
-                      <span className="text-[9px] font-black uppercase text-slate-900">{claim.verdict}</span>
-                    </div>
-                    <p className="text-[11px] font-bold text-slate-900 line-clamp-2 italic">"{claim.claimText}"</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

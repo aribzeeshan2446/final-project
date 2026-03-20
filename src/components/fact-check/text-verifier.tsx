@@ -102,7 +102,7 @@ export function TextVerifier() {
               ) : (
                 <Textarea
                   placeholder="Paste a claim or statement here to fact-check..."
-                  className="min-h-[180px] text-3xl border-2 border-slate-200/80 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/20 px-12 py-8 bg-white/60 resize-none placeholder:text-slate-400 text-slate-900 font-black tracking-tight leading-tight transition-all duration-300"
+                  className="min-h-[180px] text-3xl border-2 border-slate-200/80 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/20 px-12 py-8 bg-white/60 resize-none placeholder:text-slate-600 text-slate-900 font-black tracking-tight leading-tight transition-all duration-300"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
