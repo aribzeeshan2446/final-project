@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCcw, Zap, Image as ImageIcon, X } from "lucide-react";
+import { ShieldCheck, Loader2, RefreshCcw, Image as ImageIcon, X } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { verifyImageAccuracy } from "@/ai/flows/verify-image-accuracy";
 import { VerdictCard } from "./verdict-card";
@@ -86,8 +86,9 @@ export function TextVerifier() {
       <Card className="misty-glass border-slate-300 shadow-2xl overflow-hidden rounded-[2rem]">
         <CardContent className="p-0">
           <div className="flex flex-col">
-            <div className="p-10 space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-5">
+            {/* Darkened Input Container */}
+            <div className="p-10 space-y-6 bg-slate-100/40">
+              <div className="flex items-center justify-between border-b border-slate-200/60 pb-5">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Verification Input</span>
                 <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[9px] font-black text-primary uppercase tracking-widest">
                   AI Active
@@ -102,14 +103,14 @@ export function TextVerifier() {
               ) : (
                 <Textarea
                   placeholder="Paste a claim or statement here to fact-check..."
-                  className="min-h-[160px] text-3xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-900/60 text-slate-900 font-black tracking-tight leading-tight"
+                  className="min-h-[160px] text-3xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-900/80 text-slate-900 font-black tracking-tight leading-tight"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
               )}
             </div>
             
-            <div className="bg-slate-50/50 border-t border-slate-100 p-8 flex items-center justify-between">
+            <div className="bg-slate-50/80 border-t border-slate-100 p-8 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
                   const file = e.target.files?.[0];
