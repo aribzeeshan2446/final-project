@@ -4,27 +4,27 @@
 
 @layer base {
   :root {
-    /* Forest Clarity Palette - Maximum Contrast */
+    /* Forensic Forest Premium Palette */
     --background: 0 0% 100%;
-    --foreground: 222 47% 11%; /* Deep Slate Black */
+    --foreground: 222 47% 8%; /* Darker Slate for maximum contrast */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-    --primary: 162 94% 11%; /* Deep Forest Green */
+    --popover-foreground: 222 47% 8%;
+    --primary: 162 94% 8%; /* Deepest Forest Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 222 47% 11%; /* Switched to foreground for maximum contrast */
-    --accent: 160 51% 95%; 
-    --accent-foreground: 162 94% 11%;
+    --secondary: 210 20% 98%; /* Mist White */
+    --secondary-foreground: 222 47% 8%;
+    --muted: 210 20% 96%;
+    --muted-foreground: 222 47% 8%; /* Forcing high contrast even for muted text */
+    --accent: 160 51% 94%; 
+    --accent-foreground: 162 94% 8%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 162 94% 11%;
-    --radius: 1rem;
+    --border: 214.3 31.8% 90%;
+    --input: 214.3 31.8% 90%;
+    --ring: 162 94% 8%;
+    --radius: 1.5rem;
   }
 }
 
@@ -40,7 +40,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/90 backdrop-blur-xl border border-slate-200/80 shadow-xl;
+    @apply bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
   }
 
   .snow-drift {
@@ -52,8 +52,8 @@
       transform: translateY(-10vh) translateX(0) rotate(0deg);
       opacity: 0;
     }
-    10% { opacity: 0.8; }
-    90% { opacity: 0.8; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
     100% {
       transform: translateY(110vh) translateX(40px) rotate(360deg);
       opacity: 0;

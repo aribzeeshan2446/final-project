@@ -27,7 +27,7 @@ export function TextVerifier() {
     verdict: 'Likely Accurate' | 'Needs Verification' | 'Potentially Misleading';
     suggestedCorrectionOrContext: string | null;
     reasoning: string;
-    sources: { title: string; url: string }[];
+    sources: { title: string; url: string; reliability?: 'High' | 'Medium' | 'Mixed' }[];
     extractedText?: string;
   } | null>(null);
   
@@ -83,34 +83,34 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-12">
-      <Card className="misty-glass border-slate-300 shadow-2xl overflow-hidden">
+      <Card className="misty-glass border-slate-200 shadow-2xl overflow-hidden rounded-[2rem]">
         <CardContent className="p-0">
           <div className="flex flex-col">
-            <div className="p-8 space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Input Claim</span>
-                <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-[9px] font-bold text-slate-600 uppercase tracking-widest">
-                  AI Ready
+            <div className="p-10 space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-5">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Intelligence Input</span>
+                <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[9px] font-black text-primary uppercase tracking-widest">
+                  Encryption Active
                 </span>
               </div>
 
               {selectedImage ? (
                 <div className="relative w-fit mx-auto group">
-                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-slate-200 shadow-lg" />
-                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-slate-900 rounded-full p-2 shadow-xl hover:scale-110 border border-slate-200"><X className="h-4 w-4" /></button>
+                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-slate-200 shadow-xl" />
+                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-slate-900 rounded-full p-2.5 shadow-2xl hover:scale-110 border border-slate-200"><X className="h-4 w-4" /></button>
                 </div>
               ) : (
                 <Textarea
-                  placeholder="Paste a claim here to check its accuracy..."
-                  className="min-h-[160px] text-2xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-300 text-slate-900 font-bold leading-tight"
+                  placeholder="Input a claim for deep factual analysis..."
+                  className="min-h-[160px] text-3xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-200 text-slate-900 font-black tracking-tight leading-tight"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
               )}
             </div>
             
-            <div className="bg-slate-50 border-t border-slate-200 p-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
+            <div className="bg-slate-50/50 border-t border-slate-100 p-8 flex items-center justify-between">
+              <div className="flex items-center gap-6">
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) {
@@ -120,13 +120,13 @@ export function TextVerifier() {
                   }
                 }} />
                 {!selectedImage && (
-                  <Button variant="outline" className="rounded-full gap-2 text-xs font-bold text-slate-900 bg-white border-slate-300 hover:bg-slate-100" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="h-4 w-4" /> Upload Image
+                  <Button variant="outline" className="rounded-full gap-2 text-[10px] font-black text-slate-900 bg-white border-slate-200 hover:bg-slate-50 shadow-sm uppercase tracking-widest" onClick={() => fileInputRef.current?.click()}>
+                    <ImageIcon className="h-4 w-4" /> Upload Source
                   </Button>
                 )}
-                <div className="hidden lg:flex items-center gap-3">
+                <div className="hidden lg:flex items-center gap-4">
                   {SAMPLES.map((s, i) => (
-                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-500 hover:text-primary transition-colors uppercase tracking-widest">Sample {i+1}</button>
+                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-900 hover:text-primary transition-colors uppercase tracking-widest opacity-40 hover:opacity-100">Sample {i+1}</button>
                   ))}
                 </div>
               </div>
@@ -134,9 +134,9 @@ export function TextVerifier() {
               <Button 
                 onClick={handleVerify} 
                 disabled={isVerifying || (!inputText.trim() && !selectedImage)}
-                className="bg-primary hover:bg-primary/90 text-white rounded-full px-10 h-12 font-bold shadow-md"
+                className="bg-primary hover:bg-primary/95 text-white rounded-full px-12 h-14 font-black shadow-lg uppercase tracking-widest text-xs"
               >
-                {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Verifying...</> : <><ShieldCheck className="h-4 w-4 mr-2" /> Verify Claim</>}
+                {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-3" /> Verifying</> : <><ShieldCheck className="h-4 w-4 mr-3" /> Audit Claim</>}
               </Button>
             </div>
           </div>
@@ -151,33 +151,33 @@ export function TextVerifier() {
               context={result.suggestedCorrectionOrContext}
               reasoning={result.reasoning}
               sources={result.sources}
-              className="h-full misty-glass border-slate-300"
+              className="h-full misty-glass"
             />
           </div>
           
-          <Card className="misty-glass border-slate-300 flex flex-col items-center justify-center p-10 text-center space-y-8">
-            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Accuracy Score</h4>
+          <Card className="misty-glass flex flex-col items-center justify-center p-12 text-center space-y-10 rounded-[2.5rem]">
+            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Factual Integrity</h4>
             
             <div className="relative">
-              <svg className="w-40 h-40 transform -rotate-90 relative">
-                <circle cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-100" />
+              <svg className="w-48 h-48 transform -rotate-90 relative">
+                <circle cx="96" cy="96" r="86" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-100" />
                 <circle
-                  cx="80" cy="80" r="72" stroke="currentColor" strokeWidth="8" fill="transparent"
-                  strokeDasharray={452}
-                  strokeDashoffset={452 - (452 * (result.verdict === 'Likely Accurate' ? 95 : result.verdict === 'Potentially Misleading' ? 15 : 45)) / 100}
+                  cx="96" cy="96" r="86" stroke="currentColor" strokeWidth="8" fill="transparent"
+                  strokeDasharray={540}
+                  strokeDashoffset={540 - (540 * (result.verdict === 'Likely Accurate' ? 95 : result.verdict === 'Potentially Misleading' ? 15 : 45)) / 100}
                   className={cn("transition-all duration-1000", result.verdict === 'Likely Accurate' ? "text-primary" : "text-rose-600")}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-4xl font-black text-slate-900">
+                <span className="text-5xl font-black text-slate-900">
                   {result.verdict === 'Likely Accurate' ? '95' : result.verdict === 'Potentially Misleading' ? '15' : '45'}%
                 </span>
-                <span className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mt-1">Reliability</span>
+                <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest mt-2">Reliability</span>
               </div>
             </div>
             
-            <Button variant="outline" className="w-full rounded-full font-bold h-12 border-slate-300 text-slate-900" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
-              <RefreshCw className="h-4 w-4 mr-2" /> New Check
+            <Button variant="outline" className="w-full rounded-full font-black h-12 border-slate-200 text-slate-900 uppercase tracking-widest text-[10px]" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
+              <RefreshCcw className="h-3.5 w-3.5 mr-2" /> New Audit
             </Button>
           </Card>
         </div>

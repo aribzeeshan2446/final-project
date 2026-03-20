@@ -53,7 +53,6 @@ export function MockBrowser() {
         const rect = range.getBoundingClientRect();
         const containerRect = containerRef.current.getBoundingClientRect();
         
-        // Pin tooltip to selection
         setTooltipPos({
           x: rect.left - containerRect.left + rect.width / 2,
           y: rect.top - containerRect.top - 10
@@ -147,14 +146,14 @@ export function MockBrowser() {
                 newElements.push(
                   <span 
                     key={`${pIdx}-${claim.claimText}-${i}`} 
-                    className={cn("px-0.5 rounded-sm transition-all cursor-help relative group/claim font-bold", colorClass)}
+                    className={cn("px-0.5 rounded-sm transition-all cursor-help relative group/claim font-black", colorClass)}
                   >
                     {claim.claimText}
-                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-3 bg-slate-900 text-white text-[10px] rounded-xl shadow-2xl z-50">
-                      <span className="font-black uppercase tracking-widest block mb-1">
+                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-4 bg-slate-900 text-white text-[10px] rounded-2xl shadow-2xl z-50">
+                      <span className="font-black uppercase tracking-widest block mb-2 border-b border-white/20 pb-1">
                         {claim.verdict}
                       </span>
-                      {claim.context}
+                      <span className="font-bold opacity-90">{claim.context}</span>
                     </span>
                   </span>
                 );
@@ -172,30 +171,30 @@ export function MockBrowser() {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="rounded-[2.5rem] border-4 border-slate-200 overflow-hidden bg-white shadow-2xl relative">
+      <div className="rounded-[3rem] border-8 border-slate-100 overflow-hidden bg-white shadow-2xl relative">
         {/* Browser Chrome */}
-        <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between gap-4">
-          <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-slate-200" />
-            <div className="w-3 h-3 rounded-full bg-slate-200" />
-            <div className="w-3 h-3 rounded-full bg-slate-200" />
+        <div className="bg-slate-50/80 backdrop-blur-md p-5 border-b border-slate-100 flex items-center justify-between gap-6">
+          <div className="flex gap-2.5">
+            <div className="w-3.5 h-3.5 rounded-full bg-slate-200" />
+            <div className="w-3.5 h-3.5 rounded-full bg-slate-200" />
+            <div className="w-3.5 h-3.5 rounded-full bg-slate-200" />
           </div>
-          <div className="flex items-center gap-2 bg-white rounded-xl px-4 py-2 flex-1 border border-slate-200 shadow-sm max-w-lg">
-            <Globe className="h-4 w-4 text-slate-900" />
-            <span className="text-xs text-slate-900 truncate font-black uppercase tracking-tight">https://news.example.com/daily-digest</span>
+          <div className="flex items-center gap-3 bg-white rounded-2xl px-5 py-2.5 flex-1 border border-slate-100 shadow-inner max-w-xl">
+            <Globe className="h-4 w-4 text-slate-900 opacity-60" />
+            <span className="text-[11px] text-slate-900 truncate font-black uppercase tracking-tight">https://news.example.com/daily-digest</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             <Button 
               size="sm" 
               variant="default" 
               disabled={isScanning}
               onClick={handleScanPage}
-              className="h-10 rounded-full gap-2 text-[10px] font-black uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-md px-5"
+              className="h-11 rounded-full gap-2.5 text-[10px] font-black uppercase tracking-widest bg-primary hover:bg-primary/95 shadow-lg px-6"
             >
               {isScanning ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
-              Scan Page
+              Full Audit
             </Button>
-            <div className="flex items-center gap-3 text-slate-900 border-l border-slate-200 pl-4">
+            <div className="flex items-center gap-4 text-slate-900 border-l border-slate-200 pl-5">
               <RotateCcw className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
               <Search className="h-5 w-5 cursor-pointer hover:text-primary transition-colors" />
             </div>
@@ -204,27 +203,27 @@ export function MockBrowser() {
 
         {/* Content Area */}
         <div 
-          className="p-12 md:p-20 min-h-[650px] relative select-text" 
+          className="p-16 md:p-24 min-h-[700px] relative select-text" 
           onMouseUp={handleTextSelection}
           ref={containerRef}
         >
-          <div className="max-w-3xl mx-auto space-y-10">
-            <h1 className="text-5xl font-black font-headline text-slate-900 leading-[1.1] tracking-tight">
-              The Future of Information: Deciphering Fact from Fiction
+          <div className="max-w-3xl mx-auto space-y-12">
+            <h1 className="text-6xl font-black font-headline text-slate-900 leading-[1.05] tracking-tight">
+              Deciphering Fact <br/><span className="text-primary italic">from</span> Fiction
             </h1>
-            <div className="flex items-center justify-between text-xs text-slate-900 font-black uppercase tracking-widest border-b border-slate-100 pb-6">
-              <div className="flex items-center gap-4">
-                <span>By Elena Vance</span>
-                <span className="text-slate-200">•</span>
-                <span>October 24, 2023</span>
+            <div className="flex items-center justify-between text-[11px] text-slate-900 font-black uppercase tracking-widest border-b-2 border-slate-50 pb-8">
+              <div className="flex items-center gap-5">
+                <span>Elena Vance</span>
+                <span className="text-slate-100">|</span>
+                <span>Oct 24, 2023</span>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-primary/5 text-primary">
-                <Info className="h-3 w-3" />
-                <span>Select text to audit</span>
+              <div className="flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primary/5 text-primary border border-primary/10">
+                <Info className="h-3.5 w-3.5" />
+                <span>Select Text to Audit</span>
               </div>
             </div>
             
-            <div className="prose prose-slate max-w-none text-xl text-slate-900 font-bold leading-relaxed space-y-6">
+            <div className="prose prose-slate max-w-none text-xl text-slate-900 font-bold leading-relaxed space-y-8">
               {renderHighlightedContent()}
             </div>
           </div>
@@ -232,7 +231,7 @@ export function MockBrowser() {
           {/* Selection Tooltip */}
           {showTooltip && !result && (
             <div 
-              className="absolute z-50 animate-in fade-in zoom-in duration-200 pointer-events-auto"
+              className="absolute z-50 animate-in fade-in zoom-in duration-300 pointer-events-auto"
               style={{ 
                 left: tooltipPos.x, 
                 top: tooltipPos.y, 
@@ -242,20 +241,20 @@ export function MockBrowser() {
             >
               <Button 
                 size="sm" 
-                className="bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl gap-2 px-6 py-3 text-[11px] font-black uppercase tracking-widest border-2 border-white"
+                className="bg-primary hover:bg-primary/95 text-white rounded-full shadow-2xl gap-3 px-8 py-4 text-[12px] font-black uppercase tracking-widest border-4 border-white"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={verifyText}
               >
                 <ShieldCheck className="h-4 w-4" />
-                Verify Selection
+                Audit Selection
               </Button>
-              <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-t-[8px] border-t-primary mx-auto" />
+              <div className="w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[10px] border-t-primary mx-auto" />
             </div>
           )}
 
-          {/* Integrated Seamless Result Card (COMPACT VERSION) */}
+          {/* Integrated Seamless Result Card */}
           {result && (
-            <div className="absolute inset-0 z-50 bg-white/40 backdrop-blur-sm p-4 flex items-center justify-center animate-in fade-in zoom-in duration-300">
+            <div className="absolute inset-0 z-50 bg-white/60 backdrop-blur-md p-6 flex items-center justify-center animate-in fade-in zoom-in duration-500">
               <div className="relative w-full max-w-lg">
                 <VerdictCard 
                   verdict={result.verdict} 
@@ -263,7 +262,7 @@ export function MockBrowser() {
                   reasoning={result.reasoning}
                   sources={result.sources}
                   onClose={() => setResult(null)}
-                  className="shadow-[0_15px_50px_rgba(0,0,0,0.15)] border-2 border-slate-200"
+                  className="shadow-2xl border-4 border-white"
                 />
               </div>
             </div>
@@ -271,15 +270,15 @@ export function MockBrowser() {
 
           {/* Loading Overlay */}
           {isVerifying && (
-            <div className="absolute inset-0 bg-white/90 backdrop-blur-md z-40 flex items-center justify-center p-6">
-              <div className="bg-white p-10 rounded-[2rem] border-2 border-slate-100 shadow-2xl flex flex-col items-center gap-6 text-center">
+            <div className="absolute inset-0 bg-white/95 backdrop-blur-xl z-40 flex items-center justify-center p-8">
+              <div className="bg-white p-12 rounded-[3rem] border-4 border-slate-50 shadow-2xl flex flex-col items-center gap-8 text-center max-w-sm">
                 <div className="relative">
-                  <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                  <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-primary" />
+                  <div className="w-20 h-20 border-6 border-primary/10 border-t-primary rounded-full animate-spin" />
+                  <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-black text-xl uppercase tracking-tight text-slate-900">Verifying</h3>
-                  <p className="text-[10px] text-slate-900 font-black mt-2 uppercase tracking-widest">Scanning global records...</p>
+                  <h3 className="font-black text-2xl uppercase tracking-tight text-slate-900">Auditing</h3>
+                  <p className="text-[11px] text-slate-900 font-black mt-3 uppercase tracking-[0.2em] opacity-40">Scanning Global Indices</p>
                 </div>
               </div>
             </div>
@@ -287,52 +286,52 @@ export function MockBrowser() {
         </div>
       </div>
       
-      {/* Bottom Page Analysis (Visible only after scan) */}
+      {/* Bottom Page Analysis */}
       {scanResult && !result && (
-        <div className="mt-8 animate-in slide-in-from-bottom-4 duration-500">
-          <div className="misty-glass border-slate-200 rounded-[2rem] p-8 flex flex-col md:flex-row items-center gap-10">
-            <div className="flex flex-col items-center gap-3 shrink-0">
-               <div className="relative w-24 h-24">
+        <div className="mt-10 animate-in slide-in-from-bottom-8 duration-700">
+          <div className="misty-glass border-slate-200 rounded-[3rem] p-10 flex flex-col md:flex-row items-center gap-12">
+            <div className="flex flex-col items-center gap-4 shrink-0">
+               <div className="relative w-28 h-28">
                 <svg className="w-full h-full transform -rotate-90">
-                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-100" />
+                  <circle cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100" />
                   <circle 
-                    cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="6" fill="transparent" 
-                    strokeDasharray={251.2} 
-                    strokeDashoffset={251.2 - (251.2 * scanResult.overallHealth) / 100}
-                    className={cn("transition-all duration-1000", scanResult.overallHealth > 70 ? "text-primary" : "text-amber-600")} 
+                    cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" 
+                    strokeDasharray={301.6} 
+                    strokeDashoffset={301.6 - (301.6 * scanResult.overallHealth) / 100}
+                    className={cn("transition-all duration-1000", scanResult.overallHealth > 70 ? "text-primary" : "text-rose-600")} 
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center text-xl font-black text-slate-900">
+                <div className="absolute inset-0 flex items-center justify-center text-2xl font-black text-slate-900">
                   {scanResult.overallHealth}%
                 </div>
               </div>
-              <p className="text-[9px] font-black text-slate-900 uppercase tracking-widest">Trust Score</p>
+              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Trust Index</p>
             </div>
             
-            <div className="flex-1 space-y-6">
-              <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Page Audit Breakdown</h4>
+            <div className="flex-1 space-y-8">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <h4 className="text-[11px] font-black uppercase tracking-widest text-slate-900">Page Audit Breakdown</h4>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-[9px] font-black uppercase text-rose-600 hover:bg-rose-50"
+                  className="text-[10px] font-black uppercase text-slate-900 hover:bg-slate-100 px-4 rounded-full"
                   onClick={() => setScanResult(null)}
                 >
                   Dismiss
                 </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {scanResult.claims.slice(0, 3).map((claim, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
-                    <div className="flex items-center gap-2">
+                  <div key={i} className="p-4 rounded-2xl bg-white border border-slate-100 space-y-3 shadow-sm hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-2.5">
                       {claim.verdict === 'Accurate' ? (
-                        <CheckCircle2 className="h-3 w-3 text-primary" />
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
                       ) : (
-                        <AlertCircle className="h-3 w-3 text-amber-600" />
+                        <AlertCircle className="h-4 w-4 text-rose-600" />
                       )}
-                      <span className="text-[8px] font-black uppercase text-slate-900">{claim.verdict}</span>
+                      <span className="text-[9px] font-black uppercase text-slate-900">{claim.verdict}</span>
                     </div>
-                    <p className="text-[10px] font-bold text-slate-900 line-clamp-2 italic">"{claim.claimText}"</p>
+                    <p className="text-[11px] font-bold text-slate-900 line-clamp-2 italic">"{claim.claimText}"</p>
                   </div>
                 ))}
               </div>
