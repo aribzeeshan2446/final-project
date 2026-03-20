@@ -1,11 +1,10 @@
-
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw, Zap, Award, Image as ImageIcon, X } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCw, Zap, Award, Image as ImageIcon, X, Sparkles } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { verifyImageAccuracy } from "@/ai/flows/verify-image-accuracy";
 import { VerdictCard } from "./verdict-card";
@@ -17,8 +16,7 @@ import { cn } from "@/lib/utils";
 const SAMPLES = [
   "The Great Wall of China is the only man-made structure visible from the Moon.",
   "Humans use only 10% of their brains for daily cognitive tasks.",
-  "Goldfish have a three-second memory span.",
-  "Mount Everest is the closest point on Earth to space."
+  "Goldfish have a three-second memory span."
 ];
 
 export function TextVerifier() {
@@ -44,30 +42,8 @@ export function TextVerifier() {
     }
   }, [user, auth]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-      toast({
-        variant: "destructive",
-        title: "Invalid file type",
-        description: "Please upload an image file.",
-      });
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setSelectedImage(event.target?.result as string);
-      setInputText("");
-    };
-    reader.readAsDataURL(file);
-  };
-
   const handleVerify = async () => {
     if (!inputText.trim() && !selectedImage) return;
-
     setIsVerifying(true);
     setResult(null);
 
@@ -77,20 +53,9 @@ export function TextVerifier() {
 
       if (selectedImage) {
         const imageOutput = await verifyImageAccuracy({ imageDataUri: selectedImage });
-        output = {
-          ...imageOutput,
-          suggestedCorrectionOrContext: imageOutput.suggestedCorrectionOrContext,
-        };
+        output = imageOutput;
         originalTextForHistory = imageOutput.extractedText;
       } else {
-        if (inputText.length < 10) {
-          toast({
-            title: "Text too short",
-            description: "Please provide a more substantial claim to verify.",
-          });
-          setIsVerifying(false);
-          return;
-        }
         output = await verifySelectedTextAccuracy({ selectedText: inputText });
       }
 
@@ -99,218 +64,129 @@ export function TextVerifier() {
       if (user && firestore) {
         const verificationId = crypto.randomUUID();
         const docRef = doc(firestore, 'users', user.uid, 'verificationResults', verificationId);
-        
-        const verificationData = {
+        setDocumentNonBlocking(docRef, {
           id: verificationId,
           originalText: originalTextForHistory,
-          sourceUrl: window.location.href,
           verdict: output.verdict,
           suggestedCorrection: output.suggestedCorrectionOrContext,
           reasoning: output.reasoning,
           sources: output.sources,
           checkedAt: new Date().toISOString(),
-        };
-        
-        setDocumentNonBlocking(docRef, verificationData, { merge: true });
+        }, { merge: true });
       }
-
     } catch (error) {
-      console.error("Verification failed", error);
-      toast({
-        variant: "destructive",
-        title: "Verification Error",
-        description: "Something went wrong. Please check your connection and try again.",
-      });
+      toast({ variant: "destructive", title: "Forensic Error", description: "The atmosphere is unstable." });
     } finally {
       setIsVerifying(false);
     }
   };
 
-  const getScore = (verdict: string) => {
-    switch (verdict) {
-      case 'Likely Accurate': return { value: 95, color: 'text-primary', label: 'High Confidence' };
-      case 'Potentially Misleading': return { value: 15, color: 'text-accent', label: 'High Risk' };
-      default: return { value: 45, color: 'text-amber-500', label: 'Needs Proof' };
-    }
-  };
-
-  const score = result ? getScore(result.verdict) : null;
-
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8">
-      <Card className="border-2 shadow-xl overflow-hidden bg-white group hover:border-primary/20 transition-all duration-500">
+    <div className="w-full max-w-4xl mx-auto space-y-12">
+      <Card className="misty-glass border-white/5 shadow-2xl overflow-hidden group">
         <CardContent className="p-0">
           <div className="flex flex-col">
-            <div className="p-6 space-y-4">
+            <div className="p-8 space-y-6">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
-                  <Award className="h-4 w-4 text-primary" />
-                  {selectedImage ? "Analyze Image for Truth" : "Paste Text to Fact-Check"}
-                </label>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium bg-slate-50 px-3 py-1 rounded-full">
-                  <Zap className="h-3 w-3 text-primary" />
-                  <span>Factual Vision Active</span>
+                <div className="flex items-center gap-3">
+                  <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Forensic Input</span>
+                </div>
+                <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold text-white/40 uppercase tracking-widest">
+                  Atmospheric Scan
                 </div>
               </div>
 
               {selectedImage ? (
                 <div className="relative w-fit mx-auto group">
-                  <img src={selectedImage} alt="Verification Source" className="max-h-[300px] rounded-lg border-2 border-primary/20 shadow-md" />
-                  <button 
-                    onClick={() => setSelectedImage(null)}
-                    className="absolute -top-2 -right-2 bg-white text-slate-500 hover:text-accent rounded-full p-1 shadow-lg border hover:scale-110 transition-all"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
+                  <img src={selectedImage} alt="Source" className="max-h-[350px] rounded-2xl border border-white/10 shadow-2xl" />
+                  <button onClick={() => setSelectedImage(null)} className="absolute -top-3 -right-3 bg-white text-black rounded-full p-2 shadow-xl hover:scale-110 transition-all"><X className="h-4 w-4" /></button>
                 </div>
               ) : (
                 <Textarea
-                  placeholder="Example: The Eiffel Tower was built in 1950 by the Romans..."
-                  className="min-h-[160px] text-lg border-none focus-visible:ring-0 p-0 resize-none placeholder:text-slate-300 font-medium"
+                  placeholder="Insert claim to clarify through the mist..."
+                  className="min-h-[180px] text-2xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-white/10 text-white font-headline font-bold leading-tight"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
               )}
             </div>
             
-            <div className="bg-slate-50 p-4 border-t flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                />
+            <div className="bg-white/5 border-t border-white/5 p-6 flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => setSelectedImage(ev.target?.result as string);
+                    reader.readAsDataURL(file);
+                  }
+                }} />
                 {!selectedImage && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="rounded-full gap-2 border-slate-200 text-[10px] font-bold uppercase tracking-widest h-10 bg-white shadow-sm hover:border-primary transition-colors"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <ImageIcon className="h-3.5 w-3.5" /> Factual Vision
+                  <Button variant="ghost" className="rounded-full gap-3 text-xs font-bold text-white/60 hover:text-primary hover:bg-white/5 border border-white/10 px-6 h-12" onClick={() => fileInputRef.current?.click()}>
+                    <ImageIcon className="h-4 w-4" /> Optical Scan
                   </Button>
                 )}
-                <div className="hidden sm:flex items-center gap-3 border-l border-slate-200 pl-4">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Try Sample:</span>
-                  {SAMPLES.slice(0, 2).map((sample, i) => (
-                    <button
-                      key={i}
-                      onClick={() => {
-                        setInputText(sample);
-                        setSelectedImage(null);
-                        setResult(null);
-                      }}
-                      className="text-[10px] font-bold text-primary/70 hover:text-primary hover:underline transition-colors whitespace-nowrap"
-                    >
-                      "{sample.split(' ').slice(0, 3).join(' ')}..."
-                    </button>
+                <div className="hidden lg:flex items-center gap-4">
+                  {SAMPLES.map((s, i) => (
+                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-white/20 hover:text-primary transition-colors uppercase tracking-widest whitespace-nowrap">"{s.slice(0, 15)}..."</button>
                   ))}
                 </div>
               </div>
               
-              <div className="flex items-center gap-2">
-                {(inputText || selectedImage) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="rounded-full h-8 w-8 p-0"
-                    onClick={() => {
-                      setInputText("");
-                      setSelectedImage(null);
-                      setResult(null);
-                    }}
-                  >
-                    <RefreshCw className="h-3.5 w-3.5 text-slate-400" />
-                  </Button>
-                )}
-                <Button 
-                  onClick={handleVerify} 
-                  disabled={isVerifying || (!inputText.trim() && !selectedImage)}
-                  className="bg-primary hover:bg-primary/90 text-white rounded-full px-8 gap-2 shadow-lg shadow-primary/20 h-10 text-xs font-bold transition-all hover:scale-105 active:scale-95"
-                >
-                  {isVerifying ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> {selectedImage ? "Analyzing Image..." : "Analyzing Claim..."}
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck className="h-4 w-4" /> {selectedImage ? "Scan for Truth" : "Verify Accuracy"}
-                    </>
-                  )}
-                </Button>
-              </div>
+              <Button 
+                onClick={handleVerify} 
+                disabled={isVerifying || (!inputText.trim() && !selectedImage)}
+                className="bg-primary hover:bg-primary/90 text-black rounded-full px-10 h-12 font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(180,160,200,0.3)] transition-all hover:scale-105 active:scale-95"
+              >
+                {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Clarifying...</> : <><ShieldCheck className="h-4 w-4 mr-2" /> Audit Claim</>}
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {result && (
-        <div className="grid md:grid-cols-3 gap-6 animate-in slide-in-from-bottom-8 duration-700">
+        <div className="grid md:grid-cols-3 gap-8 animate-in slide-in-from-bottom-12 duration-1000">
           <div className="md:col-span-2">
             <VerdictCard 
               verdict={result.verdict} 
               context={result.suggestedCorrectionOrContext}
               reasoning={result.reasoning}
               sources={result.sources}
-              className="h-full"
+              className="h-full misty-glass"
             />
           </div>
           
-          <Card className="border shadow-lg flex flex-col items-center justify-center p-8 text-center space-y-6 bg-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-5">
+          <Card className="misty-glass flex flex-col items-center justify-center p-10 text-center space-y-8 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
               <Zap className="h-24 w-24 text-primary" />
             </div>
             
-            <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">Confidence Index</h4>
+            <h4 className="text-[10px] font-black text-white/30 uppercase tracking-[0.4em]">Atmospheric Clarity</h4>
             
-            <div className="relative group">
-              <svg className="w-40 h-40 transform -rotate-90">
+            <div className="relative">
+              <div className="absolute inset-0 blur-3xl bg-primary/20 rounded-full animate-pulse" />
+              <svg className="w-48 h-48 transform -rotate-90 relative">
+                <circle cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-white/5" />
                 <circle
-                  cx="80"
-                  cy="80"
-                  r="72"
-                  stroke="currentColor"
-                  strokeWidth="10"
-                  fill="transparent"
-                  className="text-slate-50"
-                />
-                <circle
-                  cx="80"
-                  cy="80"
-                  r="72"
-                  stroke="currentColor"
-                  strokeWidth="10"
-                  fill="transparent"
-                  strokeDasharray={452.4}
-                  strokeDashoffset={452.4 - (452.4 * (score?.value || 0)) / 100}
-                  className={cn("transition-all duration-1000 ease-out", score?.color)}
+                  cx="96" cy="96" r="84" stroke="currentColor" strokeWidth="8" fill="transparent"
+                  strokeDasharray={527.7}
+                  strokeDashoffset={527.7 - (527.7 * (result.verdict === 'Likely Accurate' ? 95 : result.verdict === 'Potentially Misleading' ? 15 : 45)) / 100}
+                  className={cn("transition-all duration-1000 ease-out", result.verdict === 'Likely Accurate' ? "text-primary" : "text-accent")}
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={cn("text-4xl font-black tracking-tighter", score?.color)}>{score?.value}%</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{score?.label}</span>
+                <span className="text-5xl font-black text-white tracking-tighter">
+                  {result.verdict === 'Likely Accurate' ? '95' : result.verdict === 'Potentially Misleading' ? '15' : '45'}%
+                </span>
+                <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest mt-1">Reliability</span>
               </div>
             </div>
             
-            {result.extractedText && (
-              <div className="space-y-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Extracted Claim</p>
-                <p className="text-xs text-slate-600 font-medium line-clamp-2 italic">"{result.extractedText}"</p>
-              </div>
-            )}
-            
-            <div className="pt-2 w-full">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full rounded-full gap-2 border-slate-200 font-bold text-[10px] uppercase tracking-widest h-10 hover:bg-slate-50" 
-                onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}
-              >
-                <RefreshCw className="h-3 w-3" /> New Verification
-              </Button>
-            </div>
+            <Button variant="outline" className="w-full rounded-full border-white/10 text-white/60 font-bold text-[10px] uppercase tracking-widest h-12 hover:bg-white/5" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
+              <RefreshCw className="h-4 w-4 mr-2" /> New Audit
+            </Button>
           </Card>
         </div>
       )}

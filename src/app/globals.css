@@ -4,26 +4,27 @@
 
 @layer base {
   :root {
-    --background: 120 24% 95%; /* #EEF5EE - Very light green-tinted white */
-    --foreground: 120 10% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 120 10% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 120 10% 10%;
-    --primary: 120 55% 47%; /* #36B836 - Authoritative Green */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 120 20% 90%;
-    --secondary-foreground: 120 55% 20%;
-    --muted: 120 10% 88%;
-    --muted-foreground: 120 5% 40%;
-    --accent: 0 72% 56%; /* #E03D3D - Warning Red */
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 72% 56%;
+    /* Misty Forest Palette - Deep twilight purples and soft snow pinks */
+    --background: 280 20% 4%; /* Deep obsidian */
+    --foreground: 280 10% 98%;
+    --card: 280 20% 6%;
+    --card-foreground: 280 10% 98%;
+    --popover: 280 20% 5%;
+    --popover-foreground: 280 10% 98%;
+    --primary: 280 50% 75%; /* Misty Lavender */
+    --primary-foreground: 280 20% 5%;
+    --secondary: 280 15% 15%;
+    --secondary-foreground: 280 10% 98%;
+    --muted: 280 15% 12%;
+    --muted-foreground: 280 10% 60%;
+    --accent: 330 40% 85%; /* Snow Pink */
+    --accent-foreground: 330 20% 5%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 120 15% 85%;
-    --input: 120 15% 85%;
-    --ring: 120 55% 47%;
-    --radius: 0.75rem;
+    --border: 280 15% 15%;
+    --input: 280 15% 15%;
+    --ring: 280 50% 75%;
+    --radius: 1rem;
   }
 }
 
@@ -39,37 +40,50 @@
 }
 
 @layer utilities {
-  .shutter-reveal {
-    transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
-  }
-  
-  .reveal-text {
-    animation: revealUp 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+  .misty-glass {
+    @apply bg-background/40 backdrop-blur-xl border border-white/5 shadow-[0_8px_32px_0_rgba(0,0,0,0.8)];
   }
 
-  @keyframes revealUp {
-    from {
-      transform: translateY(100%);
+  .snow-drift {
+    animation: snowFall linear infinite;
+  }
+
+  @keyframes snowFall {
+    0% {
+      transform: translateY(-10vh) translateX(0) rotate(0deg);
       opacity: 0;
     }
-    to {
-      transform: translateY(0);
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% {
+      transform: translateY(110vh) translateX(20px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .reveal-mist {
+    animation: mistClear 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+  }
+
+  @keyframes mistClear {
+    from {
       opacity: 1;
+      filter: blur(20px);
+      transform: scale(1.1);
+    }
+    to {
+      opacity: 0;
+      filter: blur(40px);
+      transform: scale(1.2);
     }
   }
 
-  @keyframes pulseSlow {
-    0%, 100% {
-      opacity: 0.3;
-      transform: scale(1);
-    }
-    50% {
-      opacity: 0.6;
-      transform: scale(1.05);
-    }
+  .pulse-biolume {
+    animation: bioPulse 4s ease-in-out infinite;
   }
 
-  .animate-pulse-slow {
-    animation: pulseSlow 4s ease-in-out infinite;
+  @keyframes bioPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); filter: blur(40px); }
+    50% { opacity: 0.6; transform: scale(1.1); filter: blur(60px); }
   }
 }

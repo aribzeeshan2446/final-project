@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 import { IntroLoader } from '@/components/intro-loader';
 import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 export default function RootLayout({
   children,
@@ -23,13 +24,26 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased selection:bg-primary/20">
+      <body className="font-body antialiased selection:bg-primary/20 bg-[#050406]">
+        {/* Fixed Misty Forest Backdrop */}
+        <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
+          <Image 
+            src="https://picsum.photos/seed/forest-truth/1920/1080"
+            alt="Misty Forest Background"
+            fill
+            className="object-cover opacity-20 grayscale brightness-50"
+            data-ai-hint="misty forest"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050406]/60 to-[#050406]" />
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
+        </div>
+
         <FirebaseClientProvider>
           <IntroLoader onComplete={() => setIsLoaded(true)} />
           <div 
             className={cn(
               "transition-all duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)]",
-              isLoaded ? "scale-100 opacity-100 blur-0" : "scale-[0.97] opacity-0 blur-sm overflow-hidden h-screen"
+              isLoaded ? "scale-100 opacity-100 blur-0" : "scale-[0.97] opacity-0 blur-xl overflow-hidden h-screen"
             )}
           >
             {children}
