@@ -12,7 +12,7 @@
     --card-foreground: 222 47% 11%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    --primary: 145 63% 5%; /* Ink Black Forest Silhouette */
+    --primary: 222 47% 11%; /* Ink Black Typography */
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222 47% 11.2%;
@@ -24,7 +24,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 145 63% 5%;
+    --ring: 222 47% 11%;
     --radius: 1.5rem;
   }
 }
@@ -41,7 +41,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/80 backdrop-blur-2xl border border-slate-200/40 shadow-[0_25px_60px_rgba(0,0,0,0.05)];
+    @apply bg-white/70 backdrop-blur-2xl border border-slate-200/40 shadow-[0_25px_60px_rgba(0,0,0,0.05)];
   }
 
   .snow-drift {

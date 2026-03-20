@@ -1,10 +1,9 @@
-
 {
   "placeholderImages": [
     {
       "id": "forensic-forest-bg",
-      "description": "User-provided ink-black pine silhouetts against white forest mist.",
-      "imageUrl": "/forest-bg.png",
+      "description": "User-provided ink-black pine silhouettes from src/Pic.",
+      "imageUrl": "/src/Pic/wallpaper1.png",
       "imageHint": "ink black pine mist"
     }
   ]
