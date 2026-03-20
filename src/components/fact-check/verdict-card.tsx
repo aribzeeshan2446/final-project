@@ -87,51 +87,59 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
   };
 
   return (
-    <Card className={cn("overflow-hidden misty-glass border-slate-300", className)}>
-      <CardHeader className={cn("py-4 px-8 flex flex-row items-center justify-between border-b border-slate-200", styles.bgColor)}>
-        <div className="flex items-center gap-3">
-          {styles.icon}
-          <CardTitle className={cn("text-lg font-black tracking-tight uppercase", styles.textColor)}>
+    <Card className={cn("overflow-hidden misty-glass border-slate-200 rounded-[2rem]", className)}>
+      <CardHeader className={cn("py-6 px-8 flex flex-row items-center justify-between border-b border-slate-100", styles.bgColor)}>
+        <div className="flex items-center gap-4">
+          <div className="bg-white p-2 rounded-xl shadow-sm">
+            {styles.icon}
+          </div>
+          <CardTitle className={cn("text-xl font-black tracking-tight uppercase", styles.textColor)}>
             {styles.label}
           </CardTitle>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-900 hover:bg-white/50" onClick={handleAudio} disabled={isGeneratingAudio}>
-            {isGeneratingAudio ? <Loader2 className="h-3 w-3 animate-spin" /> : isPlaying ? 'Pause' : 'Listen'}
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" className="h-10 rounded-full text-[10px] font-black uppercase tracking-widest text-slate-900 hover:bg-white/50 px-4" onClick={handleAudio} disabled={isGeneratingAudio}>
+            {isGeneratingAudio ? <Loader2 className="h-4 w-4 animate-spin" /> : isPlaying ? 'Pause' : 'Listen Report'}
           </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-white/50" onClick={handleCopy}>
-            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-900" />}
+          <Button variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white/50" onClick={handleCopy}>
+            {copied ? <Check className="h-5 w-5 text-primary" /> : <Copy className="h-5 w-5 text-slate-900" />}
           </Button>
-          {onClose && <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-white/50" onClick={onClose}><X className="h-5 w-5 text-slate-900" /></Button>}
+          {onClose && (
+            <Button variant="ghost" size="sm" className="h-10 w-10 p-0 rounded-full hover:bg-white/50 ml-2" onClick={onClose}>
+              <X className="h-6 w-6 text-slate-900" />
+            </Button>
+          )}
         </div>
       </CardHeader>
       
       {audioUrl && <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} className="hidden" />}
 
-      <CardContent className="p-8 space-y-8">
-        <div className="space-y-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Analysis Summary</p>
-          <p className="text-xl leading-snug font-bold text-slate-900">{context || "This claim aligns with verified factual records."}</p>
+      <CardContent className="p-10 space-y-10">
+        <div className="space-y-4">
+          <p className="text-[11px] font-black uppercase tracking-[0.3em] text-primary">Analysis Summary</p>
+          <p className="text-2xl leading-[1.2] font-black text-slate-900">{context || "This claim is supported by authoritative factual records."}</p>
         </div>
 
         {reasoning && (
-          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-widest text-primary">Detailed Analysis</p>
+          <div className="p-8 rounded-3xl bg-slate-50 border border-slate-100 space-y-3 shadow-inner">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-900">Research Insight</p>
             <p className="text-sm text-slate-900 leading-relaxed font-bold italic">{reasoning}</p>
           </div>
         )}
 
         {sources && sources.length > 0 && (
-          <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Sources & Evidence</p>
-            <div className="grid gap-3">
+          <div className="space-y-6">
+            <p className="text-[11px] font-black uppercase tracking-[0.3em] text-slate-900">Verified Evidence</p>
+            <div className="grid gap-4">
               {sources.map((s, i) => (
-                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-colors shadow-sm">
-                  <div className="flex items-center gap-3 min-w-0">
-                    <ExternalLink className="h-3 w-3 text-primary" />
-                    <span className="text-[11px] font-bold text-slate-900 truncate">{s.title}</span>
+                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 rounded-2xl border border-slate-100 bg-white hover:bg-slate-50 transition-all hover:scale-[1.01] shadow-sm">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="bg-primary/10 p-2 rounded-lg">
+                      <ExternalLink className="h-4 w-4 text-primary" />
+                    </div>
+                    <span className="text-xs font-black text-slate-900 truncate uppercase tracking-tight">{s.title}</span>
                   </div>
-                  <Badge variant="outline" className="text-[8px] font-black h-5 px-2 border-slate-300 text-slate-900">
+                  <Badge variant="outline" className="text-[9px] font-black h-6 px-3 border-slate-200 text-slate-900 bg-slate-50">
                     {s.reliability || 'Source'}
                   </Badge>
                 </a>
