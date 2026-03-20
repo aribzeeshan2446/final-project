@@ -4,9 +4,8 @@
 
 @layer base {
   :root {
-    /* Forensic Forest - High-Key Atmospheric Palette */
-    /* Background is absolute misty white for clinical clarity */
-    /* Primary is the deepest forest ink (almost black) from the pine silhouettes */
+    /* Forensic Forest - High-Key Clinical Palette */
+    /* Pristine white background for a laboratory/editorial feel */
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
@@ -35,15 +34,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    @apply bg-background text-foreground font-body antialiased;
     overflow-x: hidden;
   }
 }
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/85 backdrop-blur-2xl border border-slate-200/50 shadow-[0_25px_60px_rgba(0,0,0,0.06)];
+    @apply bg-white/80 backdrop-blur-2xl border border-slate-200/40 shadow-[0_25px_60px_rgba(0,0,0,0.05)];
   }
 
   .snow-drift {
@@ -55,41 +53,41 @@
       transform: translateY(-10vh) translateX(0) rotate(0deg);
       opacity: 0;
     }
-    10% { opacity: 0.9; }
-    90% { opacity: 0.9; }
+    10% { opacity: 0.8; }
+    90% { opacity: 0.8; }
     100% {
-      transform: translateY(110vh) translateX(50px) rotate(360deg);
+      transform: translateY(110vh) translateX(40px) rotate(360deg);
       opacity: 0;
     }
   }
 
   .reveal-mist {
-    animation: mistClear 2.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
+    animation: mistClear 2s cubic-bezier(0.85, 0, 0.15, 1) forwards;
   }
 
   @keyframes mistClear {
     from {
       opacity: 1;
-      filter: blur(50px);
+      filter: blur(40px);
       transform: scale(1);
     }
     to {
       opacity: 0;
-      filter: blur(100px);
-      transform: scale(1.5);
+      filter: blur(80px);
+      transform: scale(1.4);
     }
   }
 
   .pulse-biolume {
-    animation: bioPulse 8s ease-in-out infinite;
+    animation: bioPulse 6s ease-in-out infinite;
   }
 
   @keyframes bioPulse {
-    0%, 100% { opacity: 0.1; transform: scale(1); filter: blur(80px); }
-    50% { opacity: 0.25; transform: scale(1.3); filter: blur(120px); }
+    0%, 100% { opacity: 0.1; transform: scale(1); filter: blur(60px); }
+    50% { opacity: 0.2; transform: scale(1.2); filter: blur(100px); }
   }
 
   .forest-vignette {
-    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.02) 100%);
+    background: radial-gradient(circle at center, transparent 0%, rgba(0, 0, 0, 0.03) 100%);
   }
 }
