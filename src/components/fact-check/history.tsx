@@ -13,7 +13,7 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, Quote, Activity, ExternalLink } from "lucide-react";
+import { ShieldCheck, Clock, AlertCircle, CheckCircle2, HelpCircle, Quote, Activity, ExternalLink, BarChart3, Fingerprint, Zap } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -26,7 +26,7 @@ export function VerificationHistory() {
     return query(
       collection(firestore, "users", user.uid, "verificationResults"),
       orderBy("checkedAt", "desc"),
-      limit(12)
+      limit(20)
     );
   }, [firestore, user]);
 
@@ -34,10 +34,17 @@ export function VerificationHistory() {
 
   if (isUserLoading || isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-[360px] rounded-[2.5rem] bg-white border border-slate-100 animate-pulse shadow-sm" />
-        ))}
+      <div className="space-y-8 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 rounded-2xl bg-white border border-slate-100 animate-pulse shadow-sm" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-[400px] rounded-[2.5rem] bg-white border border-slate-100 animate-pulse shadow-sm" />
+          ))}
+        </div>
       </div>
     );
   }
@@ -77,8 +84,45 @@ export function VerificationHistory() {
     }
   };
 
+  // Calculate stats
+  const accurateCount = history.filter(h => h.verdict === 'Likely Accurate').length;
+  const misleadingCount = history.filter(h => h.verdict === 'Potentially Misleading').length;
+  const accuracyRate = Math.round((accurateCount / history.length) * 100);
+
   return (
-    <div className="relative w-full max-w-6xl mx-auto">
+    <div className="relative w-full max-w-7xl mx-auto space-y-12">
+      {/* Analytics Dashboard */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-white/50 backdrop-blur-sm border-slate-200 rounded-2xl p-6 flex items-center gap-4 group hover:bg-white transition-all">
+          <div className="p-3 rounded-xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+            <Fingerprint className="h-6 w-6" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Claims Scrutinized</p>
+            <h4 className="text-2xl font-bold text-slate-900">{history.length}</h4>
+          </div>
+        </Card>
+        <Card className="bg-white/50 backdrop-blur-sm border-slate-200 rounded-2xl p-6 flex items-center gap-4 group hover:bg-white transition-all">
+          <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform">
+            <CheckCircle2 className="h-6 w-6" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Reliable Ratio</p>
+            <h4 className="text-2xl font-bold text-slate-900">{accuracyRate}%</h4>
+          </div>
+        </Card>
+        <Card className="bg-white/50 backdrop-blur-sm border-slate-200 rounded-2xl p-6 flex items-center gap-4 group hover:bg-white transition-all">
+          <div className="p-3 rounded-xl bg-accent/10 text-accent group-hover:scale-110 transition-transform">
+            <Zap className="h-6 w-6" />
+          </div>
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Misleading Flagged</p>
+            <h4 className="text-2xl font-bold text-slate-900">{misleadingCount}</h4>
+          </div>
+        </Card>
+      </div>
+
+      {/* Main Carousel */}
       <Carousel
         opts={{
           align: "start",
@@ -89,7 +133,7 @@ export function VerificationHistory() {
         <div className="flex items-center justify-between mb-6 px-2">
           <div className="flex items-center gap-3">
             <div className="h-1 w-8 bg-primary rounded-full" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Activity Stream</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Verification Stream</span>
           </div>
           <div className="flex gap-2">
             <CarouselPrevious className="static translate-y-0 h-10 w-10 border-none bg-white hover:bg-slate-50 shadow-md rounded-full transition-all" />
@@ -102,7 +146,7 @@ export function VerificationHistory() {
             const config = getVerdictConfig(item.verdict);
             return (
               <CarouselItem key={item.id} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <Card className="h-[440px] group relative overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 bg-white rounded-[2.5rem]">
+                <Card className="h-[460px] group relative overflow-hidden border-none shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_40px_rgba(0,0,0,0.06)] transition-all duration-500 bg-white rounded-[2.5rem]">
                   <div className={cn("absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-[0.03] group-hover:opacity-5 transition-opacity", config.accent)} />
                   
                   <CardContent className="p-8 h-full flex flex-col">
@@ -154,7 +198,7 @@ export function VerificationHistory() {
                       
                       {item.sources && item.sources.length > 0 && (
                         <div>
-                          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Top Source</p>
+                          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Primary Reference</p>
                           <a 
                             href={item.sources[0].url}
                             target="_blank"

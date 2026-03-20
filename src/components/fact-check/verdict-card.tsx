@@ -1,10 +1,12 @@
 
 "use client";
 
-import { CheckCircle2, AlertCircle, HelpCircle, ArrowRight, ExternalLink, Info } from "lucide-react";
+import { CheckCircle2, AlertCircle, HelpCircle, ArrowRight, ExternalLink, Info, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Source {
   title: string;
@@ -20,6 +22,9 @@ interface VerdictCardProps {
 }
 
 export function VerdictCard({ verdict, context, reasoning, sources, className }: VerdictCardProps) {
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+
   const getStyles = () => {
     switch (verdict) {
       case 'Likely Accurate':
@@ -51,15 +56,40 @@ export function VerdictCard({ verdict, context, reasoning, sources, className }:
 
   const styles = getStyles();
 
+  const handleCopyReport = () => {
+    const reportText = `FactCheck AI Report
+Verdict: ${verdict}
+Summary: ${context || "No summary provided."}
+${reasoning ? `\nDeep Analysis: ${reasoning}` : ""}
+${sources && sources.length > 0 ? `\nSources:\n${sources.map(s => `- ${s.title}: ${s.url}`).join('\n')}` : ""}
+\nVerified via FactCheck AI`;
+
+    navigator.clipboard.writeText(reportText);
+    setCopied(true);
+    toast({
+      title: "Report Copied",
+      description: "Verification details copied to your clipboard.",
+    });
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <Card className={cn("overflow-hidden border shadow-xl bg-white", styles.borderColor, className)}>
-      <CardHeader className={cn("py-4", styles.bgColor)}>
+      <CardHeader className={cn("py-4 flex flex-row items-center justify-between", styles.bgColor)}>
         <div className="flex items-center gap-3">
           {styles.icon}
           <CardTitle className={cn("text-lg font-bold font-headline", styles.textColor)}>
             {styles.label}
           </CardTitle>
         </div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="h-8 w-8 p-0 rounded-full hover:bg-white/50" 
+          onClick={handleCopyReport}
+        >
+          {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-400" />}
+        </Button>
       </CardHeader>
       <CardContent className="pt-6 pb-6 space-y-6">
         {/* Suggested Correction */}
