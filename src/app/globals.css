@@ -4,19 +4,19 @@
 
 @layer base {
   :root {
-    /* Forensic Forest Premium Palette */
+    /* Forest Clarity Palette */
     --background: 0 0% 100%;
-    --foreground: 222 47% 8%; /* Darker Slate for maximum contrast */
+    --foreground: 222 47% 8%; /* Slate 950 */
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 8%;
     --primary: 162 94% 8%; /* Deepest Forest Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 20% 98%; /* Mist White */
+    --secondary: 210 20% 98%;
     --secondary-foreground: 222 47% 8%;
     --muted: 210 20% 96%;
-    --muted-foreground: 222 47% 8%; /* Forcing high contrast even for muted text */
+    --muted-foreground: 215 25% 20%; /* Darker muted text for high contrast */
     --accent: 160 51% 94%; 
     --accent-foreground: 162 94% 8%;
     --destructive: 0 84.2% 60.2%;
@@ -40,7 +40,7 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/95 backdrop-blur-2xl border border-slate-200/80 shadow-[0_8px_32px_rgba(0,0,0,0.06)];
+    @apply bg-white/95 backdrop-blur-2xl border border-slate-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)];
   }
 
   .snow-drift {

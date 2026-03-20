@@ -116,22 +116,22 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
 
       <CardContent className="p-6 space-y-6">
         <div className="space-y-1">
-          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Report</p>
+          <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">AI Verification Result</p>
           <p className="text-base leading-snug font-black text-slate-900">
-            {context || "This claim aligns with established historical and scientific datasets."}
+            {context || "This claim is consistent with reliable data sources."}
           </p>
         </div>
 
         {reasoning && (
           <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <p className="text-[9px] font-black uppercase tracking-widest text-slate-900">AI Forensics</p>
+            <p className="text-[9px] font-black uppercase tracking-widest text-slate-900">Analysis Breakdown</p>
             <p className="text-[11px] text-slate-900 leading-relaxed font-bold italic">{reasoning}</p>
           </div>
         )}
 
         {sources && sources.length > 0 && (
           <div className="space-y-3">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-900">Source Evidence</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-900">Sources</p>
             <div className="grid gap-2">
               {sources.map((s, i) => (
                 <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 transition-all hover:scale-[1.01] shadow-sm">

@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ShieldCheck, Search, Loader2, RefreshCw, Zap, Image as ImageIcon, X } from "lucide-react";
+import { ShieldCheck, Search, Loader2, RefreshCcw, Zap, Image as ImageIcon, X } from "lucide-react";
 import { verifySelectedTextAccuracy } from "@/ai/flows/verify-selected-text-accuracy";
 import { verifyImageAccuracy } from "@/ai/flows/verify-image-accuracy";
 import { VerdictCard } from "./verdict-card";
@@ -83,14 +83,14 @@ export function TextVerifier() {
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-12">
-      <Card className="misty-glass border-slate-200 shadow-2xl overflow-hidden rounded-[2rem]">
+      <Card className="misty-glass border-slate-300 shadow-2xl overflow-hidden rounded-[2rem]">
         <CardContent className="p-0">
           <div className="flex flex-col">
             <div className="p-10 space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-5">
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Intelligence Input</span>
+              <div className="flex items-center justify-between border-b border-slate-200 pb-5">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Verification Input</span>
                 <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[9px] font-black text-primary uppercase tracking-widest">
-                  Encryption Active
+                  AI Active
                 </span>
               </div>
 
@@ -101,8 +101,8 @@ export function TextVerifier() {
                 </div>
               ) : (
                 <Textarea
-                  placeholder="Input a claim for deep factual analysis..."
-                  className="min-h-[160px] text-3xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-200 text-slate-900 font-black tracking-tight leading-tight"
+                  placeholder="Paste a claim or statement here to fact-check..."
+                  className="min-h-[160px] text-3xl border-none focus-visible:ring-0 p-0 bg-transparent resize-none placeholder:text-slate-600 text-slate-900 font-black tracking-tight leading-tight"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
@@ -121,12 +121,12 @@ export function TextVerifier() {
                 }} />
                 {!selectedImage && (
                   <Button variant="outline" className="rounded-full gap-2 text-[10px] font-black text-slate-900 bg-white border-slate-200 hover:bg-slate-50 shadow-sm uppercase tracking-widest" onClick={() => fileInputRef.current?.click()}>
-                    <ImageIcon className="h-4 w-4" /> Upload Source
+                    <ImageIcon className="h-4 w-4" /> Upload Image
                   </Button>
                 )}
                 <div className="hidden lg:flex items-center gap-4">
                   {SAMPLES.map((s, i) => (
-                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-900 hover:text-primary transition-colors uppercase tracking-widest opacity-40 hover:opacity-100">Sample {i+1}</button>
+                    <button key={i} onClick={() => setInputText(s)} className="text-[10px] font-black text-slate-900 hover:text-primary transition-colors uppercase tracking-widest opacity-40 hover:opacity-100">Example {i+1}</button>
                   ))}
                 </div>
               </div>
@@ -136,7 +136,7 @@ export function TextVerifier() {
                 disabled={isVerifying || (!inputText.trim() && !selectedImage)}
                 className="bg-primary hover:bg-primary/95 text-white rounded-full px-12 h-14 font-black shadow-lg uppercase tracking-widest text-xs"
               >
-                {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-3" /> Verifying</> : <><ShieldCheck className="h-4 w-4 mr-3" /> Audit Claim</>}
+                {isVerifying ? <><Loader2 className="h-4 w-4 animate-spin mr-3" /> Verifying</> : <><ShieldCheck className="h-4 w-4 mr-3" /> Verify Claim</>}
               </Button>
             </div>
           </div>
@@ -155,8 +155,8 @@ export function TextVerifier() {
             />
           </div>
           
-          <Card className="misty-glass flex flex-col items-center justify-center p-12 text-center space-y-10 rounded-[2.5rem]">
-            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Factual Integrity</h4>
+          <Card className="misty-glass flex flex-col items-center justify-center p-12 text-center space-y-10 rounded-[2.5rem] border-slate-300 shadow-2xl">
+            <h4 className="text-[10px] font-black text-slate-900 uppercase tracking-[0.2em]">Trust Score</h4>
             
             <div className="relative">
               <svg className="w-48 h-48 transform -rotate-90 relative">
@@ -176,8 +176,8 @@ export function TextVerifier() {
               </div>
             </div>
             
-            <Button variant="outline" className="w-full rounded-full font-black h-12 border-slate-200 text-slate-900 uppercase tracking-widest text-[10px]" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
-              <RefreshCcw className="h-3.5 w-3.5 mr-2" /> New Audit
+            <Button variant="outline" className="w-full rounded-full font-black h-12 border-slate-300 text-slate-900 hover:bg-slate-50 uppercase tracking-widest text-[10px]" onClick={() => {setInputText(""); setSelectedImage(null); setResult(null);}}>
+              <RefreshCcw className="h-3.5 w-3.5 mr-2" /> New Scan
             </Button>
           </Card>
         </div>
