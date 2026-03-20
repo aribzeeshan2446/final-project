@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState } from 'react';
@@ -26,29 +25,29 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased selection:bg-primary/20 bg-white min-h-screen">
-        {/* Fixed Deep Forest Backdrop */}
+        {/* Fixed Deep Forensic Forest Backdrop */}
         <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
           <Image 
-            src="https://picsum.photos/seed/dark-misty-forest/1920/1080"
-            alt="Deep Shadowy Forest Background"
+            src="https://picsum.photos/seed/black-pines/1920/1080"
+            alt="Dark Pine Forest"
             fill
             priority
-            className="object-cover opacity-60 grayscale brightness-90 contrast-125"
-            data-ai-hint="dark forest mist"
+            className="object-cover opacity-80 brightness-75 contrast-150 saturate-[0.2]"
+            data-ai-hint="dark pine forest mist"
           />
-          {/* Subtle atmospheric overlays */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-white/95 via-white/70 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-white" />
-          <div className="absolute inset-0 backdrop-blur-[2px]" />
-          <div className="absolute inset-0 forest-depth" />
+          {/* Specific Twilight Mist Overlays based on image */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-[#F8FAFC] via-transparent to-[#FCE7F3]/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#E2E8F0]/20 via-white/40 to-white" />
+          <div className="absolute inset-0 backdrop-blur-[3px]" />
+          <div className="absolute inset-0 forest-vignette" />
         </div>
 
         <FirebaseClientProvider>
           <IntroLoader onComplete={() => setIsLoaded(true)} />
           <div 
             className={cn(
-              "transition-all duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] min-h-screen flex flex-col",
-              isLoaded ? "scale-100 opacity-100 blur-0" : "scale-[0.98] opacity-0 blur-2xl overflow-hidden h-screen"
+              "transition-all duration-1500 ease-[cubic-bezier(0.85,0,0.15,1)] min-h-screen flex flex-col",
+              isLoaded ? "scale-100 opacity-100 blur-0" : "scale-[0.95] opacity-0 blur-3xl overflow-hidden h-screen"
             )}
           >
             {children}
