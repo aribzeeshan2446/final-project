@@ -253,17 +253,17 @@ export function MockBrowser() {
             </div>
           )}
 
-          {/* Integrated Seamless Result Card */}
+          {/* Integrated Seamless Result Card (COMPACT VERSION) */}
           {result && (
-            <div className="absolute inset-0 z-50 bg-white/40 backdrop-blur-sm p-12 flex items-center justify-center animate-in fade-in zoom-in duration-300">
-              <div className="relative w-full max-w-2xl">
+            <div className="absolute inset-0 z-50 bg-white/40 backdrop-blur-sm p-4 flex items-center justify-center animate-in fade-in zoom-in duration-300">
+              <div className="relative w-full max-w-lg">
                 <VerdictCard 
                   verdict={result.verdict} 
                   context={result.suggestedCorrectionOrContext}
                   reasoning={result.reasoning}
                   sources={result.sources}
                   onClose={() => setResult(null)}
-                  className="shadow-[0_20px_60px_rgba(0,0,0,0.1)] border-2 border-slate-200"
+                  className="shadow-[0_15px_50px_rgba(0,0,0,0.15)] border-2 border-slate-200"
                 />
               </div>
             </div>
@@ -272,14 +272,14 @@ export function MockBrowser() {
           {/* Loading Overlay */}
           {isVerifying && (
             <div className="absolute inset-0 bg-white/90 backdrop-blur-md z-40 flex items-center justify-center p-6">
-              <div className="bg-white p-12 rounded-[2rem] border-2 border-slate-100 shadow-2xl flex flex-col items-center gap-6 text-center">
+              <div className="bg-white p-10 rounded-[2rem] border-2 border-slate-100 shadow-2xl flex flex-col items-center gap-6 text-center">
                 <div className="relative">
-                  <div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                  <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-8 w-8 text-primary" />
+                  <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                  <ShieldCheck className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-black text-2xl uppercase tracking-tight text-slate-900">Verifying</h3>
-                  <p className="text-sm text-slate-900 font-bold mt-2 uppercase tracking-widest">Scanning global records...</p>
+                  <h3 className="font-black text-xl uppercase tracking-tight text-slate-900">Verifying</h3>
+                  <p className="text-[10px] text-slate-900 font-black mt-2 uppercase tracking-widest">Scanning global records...</p>
                 </div>
               </div>
             </div>
@@ -292,47 +292,47 @@ export function MockBrowser() {
         <div className="mt-8 animate-in slide-in-from-bottom-4 duration-500">
           <div className="misty-glass border-slate-200 rounded-[2rem] p-8 flex flex-col md:flex-row items-center gap-10">
             <div className="flex flex-col items-center gap-3 shrink-0">
-               <div className="relative w-28 h-28">
+               <div className="relative w-24 h-24">
                 <svg className="w-full h-full transform -rotate-90">
-                  <circle cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-100" />
+                  <circle cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-slate-100" />
                   <circle 
-                    cx="56" cy="56" r="48" stroke="currentColor" strokeWidth="8" fill="transparent" 
-                    strokeDasharray={301.6} 
-                    strokeDashoffset={301.6 - (301.6 * scanResult.overallHealth) / 100}
+                    cx="48" cy="48" r="40" stroke="currentColor" strokeWidth="6" fill="transparent" 
+                    strokeDasharray={251.2} 
+                    strokeDashoffset={251.2 - (251.2 * scanResult.overallHealth) / 100}
                     className={cn("transition-all duration-1000", scanResult.overallHealth > 70 ? "text-primary" : "text-amber-600")} 
                   />
                 </svg>
-                <div className="absolute inset-0 flex items-center justify-center text-2xl font-black text-slate-900">
+                <div className="absolute inset-0 flex items-center justify-center text-xl font-black text-slate-900">
                   {scanResult.overallHealth}%
                 </div>
               </div>
-              <p className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Trust Score</p>
+              <p className="text-[9px] font-black text-slate-900 uppercase tracking-widest">Trust Score</p>
             </div>
             
             <div className="flex-1 space-y-6">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-black uppercase tracking-widest text-slate-900">Page Audit Breakdown</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Page Audit Breakdown</h4>
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-[10px] font-black uppercase text-rose-600"
+                  className="text-[9px] font-black uppercase text-rose-600 hover:bg-rose-50"
                   onClick={() => setScanResult(null)}
                 >
-                  Dismiss Analysis
+                  Dismiss
                 </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {scanResult.claims.slice(0, 3).map((claim, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-white/50 border border-slate-100 space-y-2">
+                  <div key={i} className="p-3 rounded-xl bg-white border border-slate-200 space-y-2 shadow-sm">
                     <div className="flex items-center gap-2">
                       {claim.verdict === 'Accurate' ? (
                         <CheckCircle2 className="h-3 w-3 text-primary" />
                       ) : (
                         <AlertCircle className="h-3 w-3 text-amber-600" />
                       )}
-                      <span className="text-[9px] font-black uppercase text-slate-900">{claim.verdict}</span>
+                      <span className="text-[8px] font-black uppercase text-slate-900">{claim.verdict}</span>
                     </div>
-                    <p className="text-[11px] font-bold text-slate-900 line-clamp-2 italic">"{claim.claimText}"</p>
+                    <p className="text-[10px] font-bold text-slate-900 line-clamp-2 italic">"{claim.claimText}"</p>
                   </div>
                 ))}
               </div>
