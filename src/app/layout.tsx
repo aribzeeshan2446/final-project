@@ -19,26 +19,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>FactCheck AI - Forensic Atmosphere</title>
-        <meta name="description" content="Clarifying the digital fog with forensic intelligence." />
+        <title>FactCheck AI - Deep Forest Clarity</title>
+        <meta name="description" content="Verified facts in a world of information." />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body selection:bg-primary/20 bg-white min-h-screen">
-        {/* Fixed Backdrop: User-provided ink-black pines from src/Pic */}
-        <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden bg-white">
+        {/* Deep Forest Backdrop */}
+        <div className="fixed inset-0 -z-50 pointer-events-none overflow-hidden">
           <Image 
             src={wallpaper} 
-            alt="Forensic Forest Backdrop"
+            alt="Forest Backdrop"
             fill
             priority
-            className="object-cover opacity-100 contrast-[1.1] brightness-[1.05]"
+            className="object-cover opacity-100"
           />
-          {/* Atmospheric Misty Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/60" />
-          <div className="absolute inset-0 backdrop-blur-[0.5px]" />
-          <div className="absolute inset-0 forest-vignette" />
+          {/* Subtle mist overlay to ensure text contrast */}
+          <div className="absolute inset-0 bg-white/20 backdrop-blur-[1px]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-white/40" />
         </div>
 
         <FirebaseClientProvider>
@@ -46,7 +45,7 @@ export default function RootLayout({
           <div 
             className={cn(
               "transition-all duration-1000 ease-[cubic-bezier(0.85,0,0.15,1)] min-h-screen flex flex-col",
-              isLoaded ? "scale-100 opacity-100 blur-0" : "scale-[0.98] opacity-0 blur-2xl overflow-hidden h-screen"
+              isLoaded ? "opacity-100 blur-0" : "opacity-0 blur-xl scale-95"
             )}
           >
             {children}

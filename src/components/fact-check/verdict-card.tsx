@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, AlertCircle, HelpCircle, ArrowRight, ExternalLink, Info, Copy, Check, Volume2, Loader2, Play, Pause, X, Search, Shield, Sparkles } from "lucide-react";
+import { CheckCircle2, AlertCircle, HelpCircle, ExternalLink, Copy, Check, Volume2, Loader2, X, Search, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,25 +39,22 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
         return {
           icon: <CheckCircle2 className="h-6 w-6 text-primary" />,
           bgColor: "bg-primary/5",
-          borderColor: "border-primary/20",
           textColor: "text-primary",
-          label: "Clarified Factual"
+          label: "Likely Accurate"
         };
       case 'Potentially Misleading':
         return {
           icon: <AlertCircle className="h-6 w-6 text-rose-500" />,
-          bgColor: "bg-rose-50/50",
-          borderColor: "border-rose-200/50",
+          bgColor: "bg-rose-50",
           textColor: "text-rose-600",
-          label: "Atmospheric Distortion"
+          label: "Potentially Misleading"
         };
       default:
         return {
           icon: <HelpCircle className="h-6 w-6 text-slate-400" />,
-          bgColor: "bg-slate-50/50",
-          borderColor: "border-slate-200/50",
+          bgColor: "bg-slate-50",
           textColor: "text-slate-600",
-          label: "Awaiting Proof"
+          label: "Needs Verification"
         };
     }
   };
@@ -67,7 +64,7 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
   const handleCopy = () => {
     navigator.clipboard.writeText(`Verdict: ${verdict}\nAnalysis: ${reasoning}`);
     setCopied(true);
-    toast({ title: "Audit Copied", description: "Verification data secured in clipboard." });
+    toast({ title: "Copied", description: "Verification saved to clipboard." });
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -83,7 +80,7 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
       setAudioUrl(media);
       setIsPlaying(true);
     } catch {
-      toast({ variant: "destructive", title: "Audio Error", description: "Could not narrate the truth." });
+      toast({ variant: "destructive", title: "Error", description: "Could not generate audio." });
     } finally {
       setIsGeneratingAudio(false);
     }
@@ -94,18 +91,18 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
       <CardHeader className={cn("py-4 px-8 flex flex-row items-center justify-between", styles.bgColor)}>
         <div className="flex items-center gap-3">
           {styles.icon}
-          <CardTitle className={cn("text-lg font-bold font-headline uppercase tracking-tighter", styles.textColor)}>
+          <CardTitle className={cn("text-lg font-bold tracking-tight", styles.textColor)}>
             {styles.label}
           </CardTitle>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" className="h-8 rounded-full hover:bg-slate-100 text-[9px] font-black uppercase tracking-widest text-slate-400" onClick={handleAudio} disabled={isGeneratingAudio}>
+          <Button variant="ghost" size="sm" className="h-8 rounded-full text-[10px] font-bold uppercase tracking-wider text-slate-500" onClick={handleAudio} disabled={isGeneratingAudio}>
             {isGeneratingAudio ? <Loader2 className="h-3 w-3 animate-spin" /> : isPlaying ? 'Pause' : 'Listen'}
           </Button>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-slate-100" onClick={handleCopy}>
-            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-300" />}
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={handleCopy}>
+            {copied ? <Check className="h-4 w-4 text-primary" /> : <Copy className="h-4 w-4 text-slate-400" />}
           </Button>
-          {onClose && <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full hover:bg-slate-100" onClick={onClose}><X className="h-5 w-5 text-slate-300" /></Button>}
+          {onClose && <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full" onClick={onClose}><X className="h-5 w-5 text-slate-400" /></Button>}
         </div>
       </CardHeader>
       
@@ -113,44 +110,34 @@ export function VerdictCard({ verdict, context, reasoning, sources, recommendedS
 
       <CardContent className="p-8 space-y-8">
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-3 w-3 text-primary" />
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">Forensic Verdict</p>
-          </div>
-          <p className="text-xl leading-snug font-bold text-slate-900">{context || "Atmosphere matches established factual indices."}</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Analysis Summary</p>
+          <p className="text-xl leading-snug font-bold text-slate-900">{context || "This claim aligns with verified factual records."}</p>
         </div>
 
         {reasoning && (
-          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-4">
-            <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary">Deep Scan Analysis</p>
-            <p className="text-sm text-slate-500 leading-relaxed italic">{reasoning}</p>
+          <div className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
+            <p className="text-[9px] font-black uppercase tracking-widest text-primary">Detailed Analysis</p>
+            <p className="text-sm text-slate-600 leading-relaxed font-medium italic">{reasoning}</p>
           </div>
         )}
 
         {sources && sources.length > 0 && (
           <div className="space-y-4">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300">Primary Nodes</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Sources & Evidence</p>
             <div className="grid gap-3">
               {sources.map((s, i) => (
-                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-white hover:bg-slate-50 transition-colors group">
+                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-white hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3 min-w-0">
-                    <ExternalLink className="h-3 w-3 text-slate-300 group-hover:text-primary transition-colors" />
-                    <span className="text-[11px] font-bold text-slate-600 truncate">{s.title}</span>
+                    <ExternalLink className="h-3 w-3 text-primary" />
+                    <span className="text-[11px] font-bold text-slate-700 truncate">{s.title}</span>
                   </div>
-                  <Badge variant="outline" className="text-[8px] font-black uppercase tracking-tight h-5 px-2 border-slate-100 text-slate-400">
-                    {s.reliability || 'Scan'}
+                  <Badge variant="outline" className="text-[8px] font-bold h-5 px-2">
+                    {s.reliability || 'Source'}
                   </Badge>
                 </a>
               ))}
             </div>
           </div>
-        )}
-
-        {recommendedSearchQuery && (
-          <Button variant="outline" className="w-full h-12 rounded-2xl border-dashed border-2 border-slate-200 hover:border-primary/40 hover:bg-primary/5 group" onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(recommendedSearchQuery)}`, '_blank')}>
-            <Search className="h-4 w-4 mr-2 text-primary group-hover:scale-110 transition-transform" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Research Deeper</span>
-          </Button>
         )}
       </CardContent>
     </Card>
