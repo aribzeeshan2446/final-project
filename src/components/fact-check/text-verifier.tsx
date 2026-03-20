@@ -86,7 +86,7 @@ export function TextVerifier() {
       <Card className="misty-glass border-slate-300 shadow-2xl overflow-hidden rounded-[2rem]">
         <CardContent className="p-0">
           <div className="flex flex-col">
-            <div className="p-10 space-y-6 bg-slate-100/40">
+            <div className="p-10 space-y-6 bg-slate-100/60">
               <div className="flex items-center justify-between border-b border-slate-200/60 pb-5">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900">Verification Input</span>
                 <span className="px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-[9px] font-black text-primary uppercase tracking-widest">
@@ -102,14 +102,14 @@ export function TextVerifier() {
               ) : (
                 <Textarea
                   placeholder="Paste a claim or statement here to fact-check..."
-                  className="min-h-[180px] text-3xl border-2 border-slate-200/80 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/20 px-12 py-8 bg-white/60 resize-none placeholder:text-slate-600 text-slate-900 font-black tracking-tight leading-tight transition-all duration-300"
+                  className="min-h-[200px] text-3xl border-2 border-slate-200/80 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary/20 px-12 py-10 bg-white/80 resize-none placeholder:text-slate-500 text-slate-900 font-black tracking-tight leading-tight transition-all duration-300"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
               )}
             </div>
             
-            <div className="bg-slate-50/80 border-t border-slate-100 p-8 flex items-center justify-between">
+            <div className="bg-slate-50/90 border-t border-slate-100 p-8 flex items-center justify-between">
               <div className="flex items-center gap-6">
                 <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
                   const file = e.target.files?.[0];

@@ -42,11 +42,12 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     if (progress === 100) {
+      // When loaded, hold it static for a moment then fade out simply
       setTimeout(() => {
         setIsExiting(true);
         onComplete();
-        setTimeout(() => setShouldHide(true), 1500);
-      }, 300);
+        setTimeout(() => setShouldHide(true), 800);
+      }, 400);
     }
   }, [progress, onComplete]);
 
@@ -54,11 +55,14 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden">
-      {/* Background Particles */}
+      {/* Background Particles - become static if exiting */}
       {snowflakes.map((flake) => (
         <div
           key={flake.id}
-          className="absolute top-[-20px] bg-slate-200 rounded-full snow-drift pointer-events-none"
+          className={cn(
+            "absolute top-[-20px] bg-slate-200 rounded-full pointer-events-none",
+            !isExiting && "snow-drift"
+          )}
           style={{
             left: flake.left,
             width: flake.size,
@@ -66,22 +70,15 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
             animationDuration: flake.duration,
             animationDelay: flake.delay,
             opacity: flake.opacity,
+            ...(isExiting ? { transform: 'translateY(50vh)' } : {})
           }}
         />
       ))}
 
-      {/* Transition Mist */}
       <div 
         className={cn(
-          "absolute inset-0 bg-white transition-opacity duration-1000 z-50",
-          isExiting ? "reveal-mist" : "opacity-0 pointer-events-none"
-        )} 
-      />
-
-      <div 
-        className={cn(
-          "relative z-10 space-y-10 transition-all duration-1000",
-          isExiting ? "opacity-0 scale-110 blur-xl" : "opacity-100"
+          "relative z-10 space-y-10 transition-all duration-700",
+          isExiting ? "opacity-0 scale-95 blur-sm" : "opacity-100"
         )}
       >
         <div className="flex flex-col items-center gap-6">
@@ -93,8 +90,8 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
             <h2 className="text-3xl font-bold tracking-tight text-slate-900">
               FactCheck <span className="text-primary">AI</span>
             </h2>
-            <p className="text-[10px] font-bold tracking-[0.4em] text-slate-300 uppercase mt-2">
-              Preparing Analysis
+            <p className="text-[10px] font-bold tracking-[0.4em] text-slate-400 uppercase mt-2">
+              Analysis Complete
             </p>
           </div>
         </div>

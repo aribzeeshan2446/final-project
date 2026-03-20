@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    /* Forest Clarity 2.0 - More Vibrant & Grounded */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 8%; /* Slate 950 */
+    /* Twilight Forest - 15% Darker & More Atmospheric */
+    --background: 210 20% 98%; 
+    --foreground: 222 47% 8%; 
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 8%;
-    --primary: 162 94% 12%; /* Deeper, richer Forest Green */
+    --primary: 162 94% 8%; /* Darker, richer Forest Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 162 20% 98%;
-    --secondary-foreground: 162 94% 12%;
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 25% 20%;
-    --accent: 162 50% 96%; 
-    --accent-foreground: 162 94% 12%;
+    --secondary: 162 20% 95%;
+    --secondary-foreground: 162 94% 8%;
+    --muted: 210 20% 94%;
+    --muted-foreground: 215 25% 15%;
+    --accent: 162 50% 94%; 
+    --accent-foreground: 162 94% 8%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 162 20% 90%;
-    --input: 162 20% 90%;
-    --ring: 162 94% 12%;
+    --border: 162 20% 85%;
+    --input: 162 20% 85%;
+    --ring: 162 94% 8%;
     --radius: 1.5rem;
   }
 }
@@ -40,15 +40,14 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/95 backdrop-blur-2xl border border-slate-200 shadow-[0_8px_32px_rgba(0,0,0,0.08)];
+    @apply bg-white/90 backdrop-blur-2xl border border-slate-200 shadow-[0_12px_40px_rgba(0,0,0,0.12)];
   }
 
   .premium-header {
-    @apply bg-white/70 backdrop-blur-xl border-b-2 border-primary/10 shadow-sm sticky top-0 z-50;
-    /* Adding a subtle decorative top border for interest */
+    @apply bg-white/80 backdrop-blur-xl border-b-2 border-primary/10 shadow-sm sticky top-0 z-50;
     &::before {
       content: '';
-      @apply absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/40 to-transparent;
+      @apply absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/30 to-transparent;
     }
   }
 
@@ -66,22 +65,6 @@
     100% {
       transform: translateY(110vh) translateX(40px) rotate(360deg);
       opacity: 0;
-    }
-  }
-
-  .reveal-mist {
-    animation: mistClear 1.5s cubic-bezier(0.85, 0, 0.15, 1) forwards;
-  }
-
-  @keyframes mistClear {
-    from {
-      opacity: 1;
-      filter: blur(40px);
-    }
-    to {
-      opacity: 0;
-      filter: blur(80px);
-      transform: scale(1.2);
     }
   }
 }
