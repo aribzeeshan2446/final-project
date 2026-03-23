@@ -45,11 +45,11 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
       // Hold static, then trigger TV shutoff effect
       setTimeout(() => {
         setIsExiting(true);
-        // Sync the onComplete (which reveals the site) with the end of the TV effect
+        // Sync the onComplete (which reveals the site) with the end of the TV effect (0.7s)
         setTimeout(() => {
           onComplete();
-        }, 600);
-        // Fully remove the loader from DOM after animation completes
+        }, 700);
+        // Fully remove the loader from DOM
         setTimeout(() => setShouldHide(true), 1200);
       }, 400);
     }
