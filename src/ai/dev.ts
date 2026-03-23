@@ -6,3 +6,4 @@ import '@/ai/flows/verify-selected-text-accuracy.ts';
 import '@/ai/flows/verify-image-accuracy.ts';
 import '@/ai/flows/text-to-speech-flow.ts';
 import '@/ai/flows/analyze-page-claims.ts';
+import '@/ai/flows/deep-analysis-flow.ts';

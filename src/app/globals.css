@@ -5,25 +5,25 @@
 @layer base {
   :root {
     /* Twilight Forest - 15% Darker & More Atmospheric */
-    --background: 210 20% 98%; 
+    --background: 210 20% 93%; 
     --foreground: 222 47% 8%; 
     --card: 0 0% 100%;
     --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 8%;
-    --primary: 162 94% 8%; /* Darker, richer Forest Green */
+    --primary: 162 94% 6%; /* Even Darker Forest Green */
     --primary-foreground: 0 0% 100%;
-    --secondary: 162 20% 95%;
-    --secondary-foreground: 162 94% 8%;
-    --muted: 210 20% 94%;
+    --secondary: 162 20% 92%;
+    --secondary-foreground: 162 94% 6%;
+    --muted: 210 20% 90%;
     --muted-foreground: 215 25% 15%;
-    --accent: 162 50% 94%; 
-    --accent-foreground: 162 94% 8%;
+    --accent: 162 50% 92%; 
+    --accent-foreground: 162 94% 6%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 162 20% 85%;
-    --input: 162 20% 85%;
-    --ring: 162 94% 8%;
+    --border: 162 20% 80%;
+    --input: 162 20% 80%;
+    --ring: 162 94% 6%;
     --radius: 1.5rem;
   }
 }
@@ -40,14 +40,14 @@
 
 @layer utilities {
   .misty-glass {
-    @apply bg-white/90 backdrop-blur-2xl border border-slate-200 shadow-[0_12px_40px_rgba(0,0,0,0.12)];
+    @apply bg-white/90 backdrop-blur-2xl border border-slate-300 shadow-[0_12px_45px_rgba(0,0,0,0.15)];
   }
 
   .premium-header {
-    @apply bg-white/80 backdrop-blur-xl border-b-2 border-primary/10 shadow-sm sticky top-0 z-50;
+    @apply bg-white/80 backdrop-blur-xl border-b-2 border-primary/15 shadow-sm sticky top-0 z-50;
     &::before {
       content: '';
-      @apply absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/30 to-transparent;
+      @apply absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-primary/40 to-transparent;
     }
   }
 
