@@ -42,11 +42,15 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
 
   useEffect(() => {
     if (progress === 100) {
-      // When loaded, hold it static for a moment then fade out simply
+      // Hold static, then trigger TV shutoff effect
       setTimeout(() => {
         setIsExiting(true);
-        onComplete();
-        setTimeout(() => setShouldHide(true), 800);
+        // Sync the onComplete (which reveals the site) with the end of the TV effect
+        setTimeout(() => {
+          onComplete();
+        }, 600);
+        // Fully remove the loader from DOM after animation completes
+        setTimeout(() => setShouldHide(true), 1200);
       }, 400);
     }
   }, [progress, onComplete]);
@@ -54,15 +58,17 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
   if (shouldHide) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden">
+    <div 
+      className={cn(
+        "fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center overflow-hidden transition-all duration-300",
+        isExiting && "tv-shutoff"
+      )}
+    >
       {/* Background Particles - become static if exiting */}
-      {snowflakes.map((flake) => (
+      {!isExiting && snowflakes.map((flake) => (
         <div
           key={flake.id}
-          className={cn(
-            "absolute top-[-20px] bg-slate-200 rounded-full pointer-events-none",
-            !isExiting && "snow-drift"
-          )}
+          className="absolute top-[-20px] bg-slate-200 rounded-full pointer-events-none snow-drift"
           style={{
             left: flake.left,
             width: flake.size,
@@ -70,15 +76,14 @@ export function IntroLoader({ onComplete }: { onComplete: () => void }) {
             animationDuration: flake.duration,
             animationDelay: flake.delay,
             opacity: flake.opacity,
-            ...(isExiting ? { transform: 'translateY(50vh)' } : {})
           }}
         />
       ))}
 
       <div 
         className={cn(
-          "relative z-10 space-y-10 transition-all duration-700",
-          isExiting ? "opacity-0 scale-95 blur-sm" : "opacity-100"
+          "relative z-10 space-y-10 transition-all duration-300",
+          isExiting ? "opacity-0 scale-75 blur-md" : "opacity-100"
         )}
       >
         <div className="flex flex-col items-center gap-6">

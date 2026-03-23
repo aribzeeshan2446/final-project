@@ -67,4 +67,31 @@
       opacity: 0;
     }
   }
+
+  @keyframes tv-shutoff {
+    0% {
+      transform: scale(1, 1);
+      filter: brightness(1);
+      opacity: 1;
+    }
+    20% {
+      transform: scale(1.1, 0.01);
+      filter: brightness(2);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(0.005, 0.005);
+      filter: brightness(5);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(0, 0);
+      filter: brightness(10);
+      opacity: 0;
+    }
+  }
+
+  .tv-shutoff {
+    animation: tv-shutoff 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
 }
