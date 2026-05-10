@@ -1,7 +1,8 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  /* Pin tracing root so a parent-folder lockfile (e.g. on Windows) does not confuse standalone output */
+  outputFileTracingRoot: process.cwd(),
   typescript: {
     ignoreBuildErrors: true,
   },

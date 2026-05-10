@@ -1,0 +1,4 @@
+# Never upload secrets with `vercel` CLI (use Project → Environment Variables)
+.env
+.env.*
+!.env.example
