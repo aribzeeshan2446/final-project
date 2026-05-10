@@ -1,8 +1,16 @@
 import type { FirebaseOptions } from 'firebase/app';
 
 /**
- * Firebase Web SDK config from env only — never put API keys in this file.
- * Use NEXT_PUBLIC_FIREBASE_* in .env (see .env.example).
+ * Firebase **Web** client configuration.
+ *
+ * - This file does **not** contain secret strings — only reads env vars.
+ * - Names starting with `NEXT_PUBLIC_` are inlined into the browser bundle at build time.
+ *   That is how Firebase’s **client** SDK is meant to work: the “API key” is a **project
+ *   identifier**, not a private server secret. Lock it down in Google Cloud Console
+ *   (HTTP referrer + API restrictions) and rely on Firestore / Auth rules for data access.
+ * - Put values in `.env` locally; never paste keys as literals here or commit `.env`.
+ *
+ * @see https://firebase.google.com/docs/projects/api-keys
  */
 export function getFirebaseConfig(): FirebaseOptions {
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
