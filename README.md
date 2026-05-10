@@ -1,9 +1,6 @@
-# FactCheck AI: Deep Forest Clarity
+# FactCheck AI: Deep Clarity
 
 FactCheck AI is a high-integrity factual verification platform designed to navigate the "fog of misinformation" using advanced Generative AI and a grounded, atmospheric design language.
-
-## The Core Concept
-The project is built on the philosophy of **"Truth through Atmosphere."** Unlike clinical or generic AI tools, FactCheck AI utilizes a "Twilight Forest" aesthetic (15% darker than standard UIs) to create a focused, high-contrast environment for critical thinking.
 
 ## Key Features
 
